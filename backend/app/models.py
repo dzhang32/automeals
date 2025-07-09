@@ -15,6 +15,7 @@ class RecipeIngredientLink(SQLModel, table=True):
 class Recipe(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
+    instructions: str
     ingredients: list["Ingredient"] = Relationship(
         back_populates="recipes", link_model=RecipeIngredientLink
     )
@@ -23,6 +24,7 @@ class Recipe(SQLModel, table=True):
 class Ingredient(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
+    core: bool
     recipes: list[Recipe] = Relationship(
         back_populates="ingredients", link_model=RecipeIngredientLink
     )

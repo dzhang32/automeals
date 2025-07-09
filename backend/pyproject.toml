@@ -2,9 +2,7 @@
 name = "autoingredients-backend"
 version = "0.1.0"
 description = "Backend for autoingredients."
-authors = [
-    { name = "David Zhang" },
-]
+authors = [{ name = "David Zhang" }]
 requires-python = ">=3.13"
 dependencies = [
     "fastapi==0.116.0",
@@ -13,18 +11,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pre-commit==4.1.0",
-    "pytest==8.3.4",
-]
+dev = ["pre-commit==4.1.0", "pytest==8.3.4"]
 
 [tool.setuptools.packages.find]
 where = ["app"]
 
 [tool.setuptools.package-data]
-"app" = ["data/*"]
+"app" = ["raw_data/*"]
 
 [build-system]
 requires = ['pip>=25.1.1', 'setuptools>=80.9.0', 'wheel>=0.45.1']
 build-backend = 'setuptools.build_meta'
-
