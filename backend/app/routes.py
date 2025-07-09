@@ -12,7 +12,7 @@ async def root() -> dict[str, str]:
     return {"message": "Hello World"}
 
 
-@router.get("/recipes/{id}")
+@router.get("/recipes/{id}", response_model=Recipe)
 async def get_recipe(id: int) -> Recipe:
     with Session(engine) as session:
         recipe = session.get(Recipe, id)
