@@ -1,4 +1,4 @@
-def test_get_recipe(test_client) -> None:
+def test_get_recipe(test_client):
     response = test_client.get("/recipes/1")
 
     assert response.status_code == 200

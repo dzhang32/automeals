@@ -4,8 +4,8 @@ import csv
 import importlib.resources as pkg_resources
 
 from sqlmodel import Session, select
+from sqlalchemy.engine import Engine
 
-from app.db import engine
 from app.models import Ingredient, Recipe, RecipeIngredientLink
 
 DATA_DIR = pkg_resources.files("app.raw_data")
@@ -41,7 +41,7 @@ def load_recipes_ingredients() -> tuple[list[dict], list[dict]]:
     return recipes, ingredients
 
 
-def initialise_recipe_data() -> None:
+def initialise_recipe_data(engine: Engine) -> None:
     with Session(engine) as session:
         # Only initialise recipes if database is empty.
         first_recipe = session.exec(select(Recipe)).first()

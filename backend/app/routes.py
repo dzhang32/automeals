@@ -1,7 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from app.db import engine
+from app.db import get_session
 from app.models import Recipe
 
 router = APIRouter()
@@ -13,8 +13,6 @@ async def root() -> dict[str, str]:
 
 
 @router.get("/recipes/{id}", response_model=Recipe)
-async def get_recipe(id: int) -> Recipe:
-    with Session(engine) as session:
-        recipe = session.get(Recipe, id)
-
+async def get_recipe(id: int, session: Session = Depends(get_session)) -> Recipe:
+    recipe = session.get(Recipe, id)
     return recipe
