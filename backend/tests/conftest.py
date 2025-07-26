@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, StaticPool, create_engine
 
-from app.data import initialise_recipe_data
+from app.data import initialise_recipe_ingredients
 from app.db import get_session
 from app.main import app
 
@@ -23,7 +23,7 @@ def test_db():
     )
 
     SQLModel.metadata.create_all(test_engine)
-    initialise_recipe_data(test_engine)
+    initialise_recipe_ingredients(test_engine)
 
     # Connect to the test database.
     def get_test_session():
