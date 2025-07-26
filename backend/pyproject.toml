@@ -1,7 +1,7 @@
 [project]
-name = "autoingredients-backend"
+name = "automeals-backend"
 version = "0.1.0"
-description = "Backend for autoingredients."
+description = "Backend for automeals."
 authors = [{ name = "David Zhang" }]
 requires-python = ">=3.13"
 dependencies = [
