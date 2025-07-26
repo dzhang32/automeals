@@ -1,5 +1,24 @@
 import pytest
 
+from app.data import DATA_DIR
+
+
+def test_get_recipes(test_client):
+    """
+    Test that all recipes can be retrieved.
+    """
+    response = test_client.get("/recipes")
+
+    assert response.status_code == 200
+
+    with open(DATA_DIR.joinpath("recipes.csv")) as recipes_path:
+        # Account for header row.
+        n_recipes = -1
+        for _ in recipes_path:
+            n_recipes += 1
+
+    assert len(response.json()) == n_recipes
+
 
 @pytest.mark.parametrize("recipe_id, expected_status_code", [(1, 200), (0, 404)])
 def test_get_recipe(test_client, recipe_id, expected_status_code):
