@@ -1,19 +1,19 @@
-"""Manages the tables within the database."""
+"""Defines the models for the database."""
 
 from sqlmodel import Field, Relationship, SQLModel
 
 
 class RecipeIngredientLink(SQLModel, table=True):
-    recipe_id: int | None = Field(
-        default=None, foreign_key="recipe.id", primary_key=True
-    )
-    ingredient_id: int | None = Field(
-        default=None, foreign_key="ingredient.id", primary_key=True
-    )
+    """
+    Link recipes to ingredients (many-to-many relationship).
+    """
+
+    recipe_id: int = Field(foreign_key="recipe.id", primary_key=True)
+    ingredient_id: int = Field(foreign_key="ingredient.id", primary_key=True)
 
 
 class Recipe(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
     name: str
     instructions: str
     ingredients: list["Ingredient"] = Relationship(
@@ -22,7 +22,7 @@ class Recipe(SQLModel, table=True):
 
 
 class Ingredient(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
     name: str
     core: bool
     recipes: list[Recipe] = Relationship(
