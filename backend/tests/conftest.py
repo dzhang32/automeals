@@ -5,9 +5,9 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, StaticPool, create_engine
 
+from app.data import initialise_recipe_data
 from app.db import get_session
 from app.main import app
-from app.models import Recipe
 
 
 @pytest.fixture
@@ -23,6 +23,7 @@ def test_db():
     )
 
     SQLModel.metadata.create_all(test_engine)
+    initialise_recipe_data(test_engine)
 
     # Connect to the test database.
     def get_test_session():
@@ -40,21 +41,6 @@ def test_db():
 
 
 @pytest.fixture
-def populate_test_data(test_db):
-    """Populate the test database with sample data"""
-    with Session(test_db) as session:
-        # Create a test recipe
-        recipe = Recipe(
-            id=1,
-            name="Crispy Duck with Fava Beans & Caramelised Onions",
-            instructions="Test instructions for the duck recipe",
-        )
-        session.add(recipe)
-        session.commit()
-    return test_db
-
-
-@pytest.fixture
-def test_client(populate_test_data):
+def test_client(test_db):
     """Create test client with test database and populated data"""
     return TestClient(app)

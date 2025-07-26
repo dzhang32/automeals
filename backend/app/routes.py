@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 
 from app.db import get_session
@@ -14,5 +14,12 @@ async def root() -> dict[str, str]:
 
 @router.get("/recipes/{id}", response_model=Recipe)
 async def get_recipe(id: int, session: Session = Depends(get_session)) -> Recipe:
+    """
+    Get a recipe by its unique identifier.
+    """
     recipe = session.get(Recipe, id)
+
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+
     return recipe
