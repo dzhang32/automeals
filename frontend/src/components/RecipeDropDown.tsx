@@ -8,6 +8,7 @@ interface Recipe {
 
 export default function RecipeDropDown() {
   const [recipes, setRecipes] = useState<Recipe[] | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/recipes")
@@ -24,16 +25,19 @@ export default function RecipeDropDown() {
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        Select a recipe
+        {selectedRecipe ? selectedRecipe.name : "Select a recipe"}
       </button>
       <ul className="dropdown-menu">
-        {
-            recipes?.map((recipe) => (
-                <li>
-                    <a className="dropdown-item">{recipe.name}</a>
-                </li>
-            ))
-        }
+        {recipes?.map((recipe) => (
+          <li>
+            <a
+              className="dropdown-item"
+              onClick={() => setSelectedRecipe(recipe)}
+            >
+              {recipe.name}
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   );
