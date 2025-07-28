@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-
-interface Recipe {
-  name: string;
-  instructions: string;
-  id: number;
-}
+import type { Recipe } from "../types";
 
 export default function RecipeDropDown() {
   const [recipes, setRecipes] = useState<Recipe[] | null>(null);
