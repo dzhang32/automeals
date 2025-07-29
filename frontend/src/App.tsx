@@ -1,11 +1,11 @@
 import './App.css'
-import RecipeDropDown from './components/RecipeDropDown'
+import RecipeCards from './components/RecipeCards'
 
 
 function App() {
   return (
     <div>
-      <RecipeDropDown />
+      <RecipeCards />
     </div>
   );
 }
