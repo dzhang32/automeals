@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import type { Recipe } from "../types";
+import type { Recipe, TidyRecipe } from "../types";
 import InstructionsModal from "./InstructionsModal";
+import tidyRecipe from "../utils/tidyRecipe";
 
 export default function RecipeCards() {
-  const [recipes, setRecipes] = useState<Recipe[] | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/recipes")
       .then((res) => res.json())
-      .then((data) => setRecipes(data))
+      .then((data: Recipe[]) => {
+        setRecipes(data.map(tidyRecipe));
+      })
       .catch(() => setRecipes(null));
   }, []);
 
