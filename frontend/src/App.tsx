@@ -1,13 +1,20 @@
+import { useState } from "react";
 import "./App.css";
-import RecipeCards from "./components/RecipeCards";
 import NavigationBar from "./components/NavigationBar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PickPage from "./pages/PickPage";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
-    <div>
-      <NavigationBar />
-      <RecipeCards />
-    </div>
+    <BrowserRouter>
+      <NavigationBar onSearch={setSearchQuery} />
+
+      <Routes>
+        <Route path="/" element={<PickPage searchQuery={searchQuery} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
