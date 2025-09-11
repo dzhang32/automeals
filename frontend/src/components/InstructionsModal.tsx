@@ -15,6 +15,7 @@ export default function InstructionsModal({ recipe }: InstructionsModalProps) {
     >
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
+          {/* if selected recipe is not null, show the modal */}
           {recipe ? (
             <>
               <div className="modal-header">
@@ -38,11 +39,7 @@ export default function InstructionsModal({ recipe }: InstructionsModalProps) {
                 </ol>
               </div>
             </>
-          ) : (
-            <div className="modal-body">
-              <p>Loading...</p>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
