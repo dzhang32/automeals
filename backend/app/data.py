@@ -1,4 +1,6 @@
-"""Initialise data."""
+"""
+Initialise data.
+"""
 
 import csv
 import importlib.resources as pkg_resources

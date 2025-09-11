@@ -1,4 +1,6 @@
-"""Manages the database creation and connection."""
+"""
+Manages the database creation and connection.
+"""
 
 from typing import Generator
 
