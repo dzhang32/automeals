@@ -11,6 +11,7 @@ export default function NavigationBar({ onSearch }: NavigationBarProps) {
         <a className="navbar-brand">automeals</a>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {/* Nav bar links to Explore (/) and Plan (/plan) pages */}
             <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="/">
                 Explore
@@ -22,6 +23,8 @@ export default function NavigationBar({ onSearch }: NavigationBarProps) {
               </Link>
             </li>
           </ul>
+
+          {/* Nav bar search input */}
           <div className="d-flex" role="search">
             <input
               className="form-control me-2"
