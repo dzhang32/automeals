@@ -1,4 +1,4 @@
-import type { Recipe, TidyRecipe } from "../types";
+import type { Recipe, TidyRecipe } from "../types/recipe";
 
 export default function tidyRecipe(recipe: Recipe): TidyRecipe {
   return {
