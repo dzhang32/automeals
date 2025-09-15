@@ -1,4 +1,4 @@
-import type { TidyRecipe } from "../types";
+import type { TidyRecipe } from "../types/recipe";
 
 interface InstructionsModalProps {
   recipe: TidyRecipe | null;

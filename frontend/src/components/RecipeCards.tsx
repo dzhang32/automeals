@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import type { Recipe, TidyRecipe } from "../types";
+import type { Recipe, TidyRecipe } from "../types/recipe";
 import InstructionsModal from "./InstructionsModal";
 import tidyRecipe from "../utils/tidyRecipe";
 import Fuse from "fuse.js";
