@@ -6,12 +6,12 @@ import Fuse from "fuse.js";
 
 interface RecipeCardsProps {
   searchQuery: string;
-  ExploreOrPlan: "explore" | "plan";
+  exploreOrPlan: "explore" | "plan";
 }
 
 export default function RecipeCards({
   searchQuery,
-  ExploreOrPlan,
+  exploreOrPlan,
 }: RecipeCardsProps) {
   const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
@@ -73,7 +73,7 @@ export default function RecipeCards({
       <div className="container">
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
           {filteredRecipes?.map((recipe) =>
-            ExploreOrPlan === "explore" ? (
+            exploreOrPlan === "explore" ? (
               <ExploreCard recipe={recipe} />
             ) : (
               <PlanCard recipe={recipe} />

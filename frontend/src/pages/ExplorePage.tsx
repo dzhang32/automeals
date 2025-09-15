@@ -7,7 +7,7 @@ interface ExplorePageProps {
 export default function ExplorePage({ searchQuery }: ExplorePageProps) {
   return (
     <div>
-      <RecipeCards searchQuery={searchQuery} ExploreOrPlan="explore" />
+      <RecipeCards searchQuery={searchQuery} exploreOrPlan="explore" />
     </div>
   );
 }

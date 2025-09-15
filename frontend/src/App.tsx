@@ -14,7 +14,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<ExplorePage searchQuery={searchQuery} />} />
-        <Route path="/plan" element={<PlanPage />} />
+        <Route path="/plan" element={<PlanPage searchQuery={searchQuery} />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,7 +1,13 @@
-export default function PlanPage() {
+import RecipeCards from "../components/RecipeCards";
+
+interface PlanPageProps {
+  searchQuery: string;
+}
+
+export default function PlanPage({ searchQuery }: PlanPageProps) {
   return (
     <div>
-      <p>Test</p>
+      <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
     </div>
   );
 }
