@@ -33,7 +33,7 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
     });
   }, [recipes]);
 
-  // Filter recipes based on search query
+  // Filter recipes based on search query.
   const filteredRecipes = useMemo(() => {
     if (!searchQuery.trim() || !fuse) return recipes;
     return fuse.search(searchQuery).map((result) => result.item);

@@ -1,10 +1,10 @@
 import RecipeCards from "../components/RecipeCards";
 
-interface PickPageProps {
+interface ExplorePageProps {
   searchQuery: string;
 }
 
-export default function PickPage({ searchQuery }: PickPageProps) {
+export default function ExplorePage({ searchQuery }: ExplorePageProps) {
   return (
     <div>
       <RecipeCards searchQuery={searchQuery} />
