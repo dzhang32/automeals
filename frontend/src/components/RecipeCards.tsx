@@ -66,16 +66,14 @@ export default function RecipeCards({
   };
 
   const PlanCard = ({ recipe }: { recipe: TidyRecipe }) => {
-    const { attributes, listeners, setNodeRef, transform, isDragging } =
-      useDraggable({
-        id: recipe.id,
-      });
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+      id: recipe.id,
+    });
 
     const style = {
       transform: transform
         ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
         : undefined,
-      opacity: isDragging ? 0.5 : 1,
     };
 
     return (
@@ -85,11 +83,10 @@ export default function RecipeCards({
           style={style}
           {...listeners}
           {...attributes}
-          className="card h-100 draggable-card"
+          className="card h-100"
         >
           <div className="card-body">
             <h5 className="card-title">{recipe.name}</h5>
-            <p className="card-text">Drag to plan</p>
           </div>
         </div>
       </div>
