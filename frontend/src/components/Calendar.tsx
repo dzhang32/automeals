@@ -1,7 +1,7 @@
 import { useDroppable } from "@dnd-kit/core";
 
-export default function Calendar() {
-  function Day() {
+export default function Calendar(props: any) {
+  function Day(props: any) {
     const { isOver, setNodeRef } = useDroppable({
       id: "meal-planner",
     });
@@ -21,10 +21,10 @@ export default function Calendar() {
 
     return (
       <div ref={setNodeRef} style={style}>
-        <p>Drop recipes here to plan your meals</p>
+        {props.children}
       </div>
     );
   }
 
-  return <Day />;
+  return <Day {...props} />;
 }

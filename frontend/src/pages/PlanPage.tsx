@@ -30,7 +30,9 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
           <div className="col-md-4">
             <h2>Meal Planner</h2>
-            <Calendar />
+            <Calendar>
+              <p>test</p>
+            </Calendar>
           </div>
         </div>
       </div>
