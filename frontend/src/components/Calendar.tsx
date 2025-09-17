@@ -1,5 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 
+// TODO: type for props.
 export default function Calendar(props: any) {
   function Day(props: any) {
     const { isOver, setNodeRef } = useDroppable({
