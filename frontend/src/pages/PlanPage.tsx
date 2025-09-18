@@ -7,7 +7,23 @@ interface PlanPageProps {
   searchQuery: string;
 }
 
+interface MealData {
+  lunch: number | null;
+  dinner: number | null;
+}
+
+type WeekData = Record<string, MealData>;
+
 export default function PlanPage({ searchQuery }: PlanPageProps) {
+  const [mealPlan, setMealPlan] = useState<WeekData>({
+    monday: { lunch: null, dinner: null },
+    tuesday: { lunch: null, dinner: null },
+    wednesday: { lunch: null, dinner: null },
+    thursday: { lunch: null, dinner: null },
+    friday: { lunch: null, dinner: null },
+    saturday: { lunch: null, dinner: null },
+    sunday: { lunch: null, dinner: null },
+  });
   const [plannedRecipe, setPlannedRecipe] = useState<number | null>(null);
 
   function handleDragEnd({ over, active }: { over: Over | null; active: any }) {
