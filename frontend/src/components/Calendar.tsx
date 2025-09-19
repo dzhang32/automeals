@@ -1,10 +1,14 @@
 import { useDroppable } from "@dnd-kit/core";
 
-// TODO: type for props.
-export default function Calendar(props: any) {
-  function Day(props: any) {
+interface CalendarProps {
+  droppableId: string;
+  children: React.ReactNode;
+}
+
+export default function Calendar({ droppableId, children }: CalendarProps) {
+  function Day() {
     const { isOver, setNodeRef } = useDroppable({
-      id: "meal-planner",
+      id: droppableId,
     });
 
     const style = {
@@ -22,10 +26,10 @@ export default function Calendar(props: any) {
 
     return (
       <div ref={setNodeRef} style={style}>
-        {props.children}
+        {children}
       </div>
     );
   }
 
-  return <Day {...props} />;
+  return <Day />;
 }

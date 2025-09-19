@@ -66,14 +66,17 @@ export default function RecipeCards({
   };
 
   const PlanCard = ({ recipe }: { recipe: TidyRecipe }) => {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
-      id: recipe.id,
-    });
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+      useDraggable({
+        id: recipe.id.toString(), // Convert to string for consistency
+      });
 
     const style = {
       transform: transform
         ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
         : undefined,
+      opacity: isDragging ? 0.5 : 1,
+      cursor: "grab",
     };
 
     return (

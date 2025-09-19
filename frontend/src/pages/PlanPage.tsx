@@ -24,12 +24,26 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     saturday: { lunch: null, dinner: null },
     sunday: { lunch: null, dinner: null },
   });
-  const [plannedRecipe, setPlannedRecipe] = useState<number | null>(null);
+
+  const updateMeal = (day: string, meal: string, value: number | null) => {
+    setMealPlan((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [meal]: value,
+      },
+    }));
+  };
 
   function handleDragEnd({ over, active }: { over: Over | null; active: any }) {
-    if (over && over.id === "meal-planner") {
-      console.log("Recipe dropped on meal planner:", active.id);
-      setPlannedRecipe(active.id);
+    if (over && typeof over.id === "string") {
+      // Parse the droppable ID to extract day and meal type
+      // Format: "day-meal" (e.g., "monday-lunch")
+      const [day, meal] = over.id.split("-");
+      if (day && meal && mealPlan[day]) {
+        updateMeal(day, meal, parseInt(active.id));
+        console.log(`Recipe ${active.id} dropped on ${day} ${meal}`);
+      }
     }
   }
 
@@ -43,13 +57,33 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
           <div className="col-md-4">
             <h2>Meal Planner</h2>
-            <Calendar>
-              {plannedRecipe ? (
-                <p> {plannedRecipe} </p>
-              ) : (
-                <p>Drop a recipe here to plan your meals</p>
-              )}
-            </Calendar>
+            {Object.keys(mealPlan).map((day) => (
+              <div key={day} className="mb-3">
+                <h5 className="text-capitalize">{day}</h5>
+                <div className="row">
+                  <div className="col-6">
+                    <small className="text-muted">Lunch</small>
+                    <Calendar droppableId={`${day}-lunch`}>
+                      {mealPlan[day].lunch ? (
+                        <p>Recipe ID: {mealPlan[day].lunch}</p>
+                      ) : (
+                        <p>Drop lunch recipe here</p>
+                      )}
+                    </Calendar>
+                  </div>
+                  <div className="col-6">
+                    <small className="text-muted">Dinner</small>
+                    <Calendar droppableId={`${day}-dinner`}>
+                      {mealPlan[day].dinner ? (
+                        <p>Recipe ID: {mealPlan[day].dinner}</p>
+                      ) : (
+                        <p>Drop dinner recipe here</p>
+                      )}
+                    </Calendar>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
