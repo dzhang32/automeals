@@ -73,102 +73,90 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         <div className="row h-100">
           <div className="col-6">
             <h4 className="mb-3">Available Recipes</h4>
-            <div
-              style={{ maxHeight: "calc(100vh - 120px)", overflowY: "auto" }}
-            >
-              <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
-            </div>
+            <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
           </div>
           <div className="col-6">
             <h4 className="mb-3">Weekly Meal Planner</h4>
-            <div
-              style={{ maxHeight: "calc(100vh - 120px)", overflowY: "auto" }}
-            >
-              <div className="row g-2">
-                {Object.keys(mealPlan).map((day) => (
-                  <div key={day} className="col-12 mb-2">
-                    <div className="card">
-                      <div className="card-body p-2">
-                        <h6 className="card-title text-capitalize mb-2">
-                          {day}
-                        </h6>
-                        <div className="row g-1">
-                          <div className="col-6">
-                            <small className="text-muted d-block mb-1">
-                              Lunch
-                            </small>
-                            <Calendar droppableId={`${day}-lunch`}>
-                              {mealPlan[day].lunch ? (
-                                <div className="text-center">
-                                  <div
-                                    style={{
-                                      fontSize: "0.75rem",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {mealPlan[day].lunch.name}
-                                  </div>
-                                  <button
-                                    className="btn btn-sm btn-outline-danger mt-1"
-                                    style={{
-                                      fontSize: "0.7rem",
-                                      padding: "2px 6px",
-                                    }}
-                                    onClick={() =>
-                                      updateMeal(day, "lunch", null)
-                                    }
-                                  >
-                                    ×
-                                  </button>
+            <div className="row g-2">
+              {Object.keys(mealPlan).map((day) => (
+                <div key={day} className="col-12 mb-2">
+                  <div className="card">
+                    <div className="card-body p-2">
+                      <h6 className="card-title text-capitalize mb-2">{day}</h6>
+                      <div className="row g-1">
+                        <div className="col-6">
+                          <small className="text-muted d-block mb-1">
+                            Lunch
+                          </small>
+                          <Calendar droppableId={`${day}-lunch`}>
+                            {mealPlan[day].lunch ? (
+                              <div className="text-center">
+                                <div
+                                  style={{
+                                    fontSize: "0.75rem",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {mealPlan[day].lunch.name}
                                 </div>
-                              ) : (
-                                <small className="text-muted">
-                                  Drop lunch here
-                                </small>
-                              )}
-                            </Calendar>
-                          </div>
-                          <div className="col-6">
-                            <small className="text-muted d-block mb-1">
-                              Dinner
-                            </small>
-                            <Calendar droppableId={`${day}-dinner`}>
-                              {mealPlan[day].dinner ? (
-                                <div className="text-center">
-                                  <div
-                                    style={{
-                                      fontSize: "0.75rem",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {mealPlan[day].dinner.name}
-                                  </div>
-                                  <button
-                                    className="btn btn-sm btn-outline-danger mt-1"
-                                    style={{
-                                      fontSize: "0.7rem",
-                                      padding: "2px 6px",
-                                    }}
-                                    onClick={() =>
-                                      updateMeal(day, "dinner", null)
-                                    }
-                                  >
-                                    ×
-                                  </button>
+                                <button
+                                  className="btn btn-sm btn-outline-danger mt-1"
+                                  style={{
+                                    fontSize: "0.7rem",
+                                    padding: "2px 6px",
+                                  }}
+                                  onClick={() => updateMeal(day, "lunch", null)}
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ) : (
+                              <small className="text-muted">
+                                Drop lunch here
+                              </small>
+                            )}
+                          </Calendar>
+                        </div>
+                        <div className="col-6">
+                          <small className="text-muted d-block mb-1">
+                            Dinner
+                          </small>
+                          <Calendar droppableId={`${day}-dinner`}>
+                            {mealPlan[day].dinner ? (
+                              <div className="text-center">
+                                <div
+                                  style={{
+                                    fontSize: "0.75rem",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {mealPlan[day].dinner.name}
                                 </div>
-                              ) : (
-                                <small className="text-muted">
-                                  Drop dinner here
-                                </small>
-                              )}
-                            </Calendar>
-                          </div>
+                                <button
+                                  className="btn btn-sm btn-outline-danger mt-1"
+                                  style={{
+                                    fontSize: "0.7rem",
+                                    padding: "2px 6px",
+                                  }}
+                                  onClick={() =>
+                                    updateMeal(day, "dinner", null)
+                                  }
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ) : (
+                              <small className="text-muted">
+                                Drop dinner here
+                              </small>
+                            )}
+                          </Calendar>
                         </div>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

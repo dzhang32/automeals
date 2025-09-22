@@ -75,8 +75,10 @@ export default function RecipeCards({
       transform: transform
         ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
         : undefined,
-      opacity: isDragging ? 0.5 : 1,
+      opacity: isDragging ? 0.8 : 1,
       cursor: "grab",
+      zIndex: isDragging ? 9999 : 1,
+      position: isDragging ? "relative" : "static",
     };
 
     return (
