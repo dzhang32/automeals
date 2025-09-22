@@ -79,31 +79,34 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
             <h4 className="mb-3">Weekly Meal Planner</h4>
             <div className="row g-2">
               {Object.keys(mealPlan).map((day) => (
-                <div key={day} className="col-12 mb-2">
+                <div key={day} className="col-12 mb-1">
                   <div className="card">
-                    <div className="card-body p-2">
-                      <h6 className="card-title text-capitalize mb-2">{day}</h6>
+                    <div className="card-body p-1">
+                      <h6
+                        className="card-title text-capitalize mb-1"
+                        style={{ fontSize: "0.8rem" }}
+                      >
+                        {day}
+                      </h6>
                       <div className="row g-1">
                         <div className="col-6">
-                          <small className="text-muted d-block mb-1">
-                            Lunch
-                          </small>
                           <Calendar droppableId={`${day}-lunch`}>
                             {mealPlan[day].lunch ? (
                               <div className="text-center">
                                 <div
                                   style={{
-                                    fontSize: "0.75rem",
+                                    fontSize: "0.65rem",
                                     fontWeight: "bold",
                                   }}
                                 >
                                   {mealPlan[day].lunch.name}
                                 </div>
                                 <button
-                                  className="btn btn-sm btn-outline-danger mt-1"
+                                  className="btn btn-sm btn-outline-danger"
                                   style={{
-                                    fontSize: "0.7rem",
-                                    padding: "2px 6px",
+                                    fontSize: "0.6rem",
+                                    padding: "1px 4px",
+                                    marginTop: "2px",
                                   }}
                                   onClick={() => updateMeal(day, "lunch", null)}
                                 >
@@ -111,32 +114,33 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                                 </button>
                               </div>
                             ) : (
-                              <small className="text-muted">
-                                Drop lunch here
+                              <small
+                                className="text-muted"
+                                style={{ fontSize: "0.6rem" }}
+                              >
+                                Lunch
                               </small>
                             )}
                           </Calendar>
                         </div>
                         <div className="col-6">
-                          <small className="text-muted d-block mb-1">
-                            Dinner
-                          </small>
                           <Calendar droppableId={`${day}-dinner`}>
                             {mealPlan[day].dinner ? (
                               <div className="text-center">
                                 <div
                                   style={{
-                                    fontSize: "0.75rem",
+                                    fontSize: "0.65rem",
                                     fontWeight: "bold",
                                   }}
                                 >
                                   {mealPlan[day].dinner.name}
                                 </div>
                                 <button
-                                  className="btn btn-sm btn-outline-danger mt-1"
+                                  className="btn btn-sm btn-outline-danger"
                                   style={{
-                                    fontSize: "0.7rem",
-                                    padding: "2px 6px",
+                                    fontSize: "0.6rem",
+                                    padding: "1px 4px",
+                                    marginTop: "2px",
                                   }}
                                   onClick={() =>
                                     updateMeal(day, "dinner", null)
@@ -146,8 +150,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                                 </button>
                               </div>
                             ) : (
-                              <small className="text-muted">
-                                Drop dinner here
+                              <small
+                                className="text-muted"
+                                style={{ fontSize: "0.6rem" }}
+                              >
+                                Dinner
                               </small>
                             )}
                           </Calendar>
