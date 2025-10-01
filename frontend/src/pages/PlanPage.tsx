@@ -72,11 +72,9 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       <div className="container-fluid p-3">
         <div className="row h-100">
           <div className="col-6">
-            <h4 className="mb-3">Available Recipes</h4>
             <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
           </div>
           <div className="col-6">
-            <h4 className="mb-3">Weekly Meal Planner</h4>
             <div className="row g-2">
               {Object.keys(mealPlan).map((day) => (
                 <div key={day} className="col-12 mb-1">
