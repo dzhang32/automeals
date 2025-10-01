@@ -40,6 +40,9 @@ def test_get_recipe(test_client, recipe_id, expected_status_code):
 
 @pytest.mark.parametrize("recipe_id, expected_status_code", [(1, 200), (0, 404)])
 def test_get_recipe_ingredients(test_client, recipe_id, expected_status_code):
+    """
+    Test that ingredients for a recipe can be retrieved by the recipe id.
+    """
     response = test_client.get(f"/recipes/{recipe_id}/ingredients")
 
     assert response.status_code == expected_status_code
