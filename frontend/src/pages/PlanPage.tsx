@@ -82,8 +82,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     }
   }
 
-  // Collect all unique ingredients from the meal plan
-  const allIngredients = useMemo(() => {
+  // Collect all unique ingredients from the meal plan and separate by type
+  const { coreIngredients, pantryIngredients } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
 
     Object.values(mealPlan).forEach((day) => {
@@ -96,9 +96,16 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       });
     });
 
-    return Array.from(ingredientsMap.values()).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+    const allIngredients = Array.from(ingredientsMap.values());
+
+    return {
+      coreIngredients: allIngredients
+        .filter((ing) => ing.core)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      pantryIngredients: allIngredients
+        .filter((ing) => !ing.core)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    };
   }, [mealPlan]);
 
   return (
@@ -200,33 +207,45 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
         </div>
 
-        {allIngredients.length > 0 && (
+        {(coreIngredients.length > 0 || pantryIngredients.length > 0) && (
           <div className="row mt-4">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header">
-                  <h5 className="mb-0">Shopping List</h5>
-                </div>
-                <div className="card-body">
-                  <div className="row">
-                    <div className="col-12">
-                      <ul className="list-unstyled mb-0">
-                        {allIngredients.map((ingredient) => (
-                          <li key={ingredient.id} className="mb-1">
-                            {ingredient.name}
-                            {!ingredient.core && (
-                              <span className="badge bg-secondary ms-2">
-                                Pantry
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+            {coreIngredients.length > 0 && (
+              <div className="col-md-6 mb-3">
+                <div className="card h-100">
+                  <div className="card-header">
+                    <h5 className="mb-0">Shopping List</h5>
+                  </div>
+                  <div className="card-body">
+                    <ul className="list-unstyled mb-0">
+                      {coreIngredients.map((ingredient) => (
+                        <li key={ingredient.id} className="mb-1">
+                          {ingredient.name}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {pantryIngredients.length > 0 && (
+              <div className="col-md-6 mb-3">
+                <div className="card h-100">
+                  <div className="card-header">
+                    <h5 className="mb-0">Pantry Items</h5>
+                  </div>
+                  <div className="card-body">
+                    <ul className="list-unstyled mb-0">
+                      {pantryIngredients.map((ingredient) => (
+                        <li key={ingredient.id} className="mb-1">
+                          {ingredient.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
