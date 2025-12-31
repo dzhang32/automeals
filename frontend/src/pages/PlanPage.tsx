@@ -163,7 +163,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       <div className="container-fluid p-3">
         <div className="row">
           <div className="col-12 col-lg-6 mb-4 mb-lg-0">
-            <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
+            <RecipeCards searchQuery={searchQuery} />
           </div>
           <div className="col-12 col-lg-6">
             <div className="row g-2">

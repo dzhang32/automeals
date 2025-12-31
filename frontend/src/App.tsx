@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import NavigationBar from "./components/NavigationBar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ExplorePage from "./pages/ExplorePage";
+import { BrowserRouter } from "react-router-dom";
 import PlanPage from "./pages/PlanPage";
 
 function App() {
@@ -11,11 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <NavigationBar onSearch={setSearchQuery} />
-
-      <Routes>
-        <Route path="/" element={<ExplorePage searchQuery={searchQuery} />} />
-        <Route path="/plan" element={<PlanPage searchQuery={searchQuery} />} />
-      </Routes>
+      <PlanPage searchQuery={searchQuery} />
     </BrowserRouter>
   );
 }

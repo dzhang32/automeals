@@ -7,13 +7,9 @@ import { useDraggable } from "@dnd-kit/core";
 
 interface RecipeCardsProps {
   searchQuery: string;
-  exploreOrPlan: "explore" | "plan";
 }
 
-export default function RecipeCards({
-  searchQuery,
-  exploreOrPlan,
-}: RecipeCardsProps) {
+export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
 
@@ -44,54 +40,47 @@ export default function RecipeCards({
     return fuse.search(searchQuery).map((result) => result.item);
   }, [searchQuery, fuse, recipes]);
 
-  const ExploreCard = ({ recipe }: { recipe: TidyRecipe }) => {
-    return (
-      <div className="col" key={recipe.id}>
-        <div className="card h-100">
-          <div className="card-body">
-            <h5 className="card-title">{recipe.name}</h5>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#instructionsModal"
-              onClick={() => setSelectedRecipe(recipe)}
-            >
-              Instructions
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const PlanCard = ({ recipe }: { recipe: TidyRecipe }) => {
+  const RecipeCard = ({ recipe }: { recipe: TidyRecipe }) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } =
       useDraggable({
-        id: recipe.id.toString(), // Convert to string for consistency
+        id: recipe.id.toString(),
       });
 
-    const style = {
+    const dragButtonStyle = {
       transform: transform
         ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
         : undefined,
       opacity: isDragging ? 0.8 : 1,
-      cursor: "grab",
       zIndex: isDragging ? 9999 : 1,
-      position: (isDragging ? "relative" : "static") as "relative" | "static",
+      position: (isDragging ? "fixed" : "static") as "fixed" | "static",
+      cursor: "grab",
     };
 
     return (
-      <div className="col" key={recipe.id}>
-        <div
-          ref={setNodeRef}
-          style={style}
-          {...listeners}
-          {...attributes}
-          className="card h-100"
-        >
-          <div className="card-body">
+      <div className="col">
+        <div className="card h-100">
+          <div className="card-body d-flex flex-column">
             <h5 className="card-title">{recipe.name}</h5>
+            <div className="mt-auto d-flex gap-2">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#instructionsModal"
+                onClick={() => setSelectedRecipe(recipe)}
+              >
+                Instructions
+              </button>
+              <button
+                ref={setNodeRef}
+                {...listeners}
+                {...attributes}
+                className="btn btn-outline-secondary btn-sm"
+                style={dragButtonStyle}
+              >
+                Drag to add
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -101,14 +90,10 @@ export default function RecipeCards({
   return (
     <>
       <div className="container">
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
-          {filteredRecipes?.map((recipe) =>
-            exploreOrPlan === "explore" ? (
-              <ExploreCard key={recipe.id} recipe={recipe} />
-            ) : (
-              <PlanCard key={recipe.id} recipe={recipe} />
-            )
-          )}
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-xl-3 g-3">
+          {filteredRecipes?.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
         </div>
         <InstructionsModal recipe={selectedRecipe} />
       </div>
