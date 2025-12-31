@@ -36,4 +36,8 @@ async def get_recipe_ingredients(
     Get the ingredients for a recipe by its unique identifier.
     """
     recipe = session.get(Recipe, id)
+
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+
     return recipe.ingredients
