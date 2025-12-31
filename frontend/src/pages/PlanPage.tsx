@@ -82,6 +82,12 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     }
   }
 
+  const formatIngredientName = (name: string): string => {
+    return name
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
   // Collect all unique ingredients from the meal plan and separate by type
   const { coreIngredients, pantryIngredients } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
@@ -212,14 +218,27 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
             {coreIngredients.length > 0 && (
               <div className="col-md-6 mb-3">
                 <div className="card h-100">
-                  <div className="card-header">
+                  <div className="card-header bg-primary text-white">
                     <h5 className="mb-0">Shopping List</h5>
                   </div>
                   <div className="card-body">
-                    <ul className="list-unstyled mb-0">
+                    <ul className="list-group list-group-flush">
                       {coreIngredients.map((ingredient) => (
-                        <li key={ingredient.id} className="mb-1">
-                          {ingredient.name}
+                        <li key={ingredient.id} className="list-group-item px-0 py-2">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`core-${ingredient.id}`}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`core-${ingredient.id}`}
+                              style={{ fontSize: "1rem" }}
+                            >
+                              {formatIngredientName(ingredient.name)}
+                            </label>
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -231,14 +250,27 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
             {pantryIngredients.length > 0 && (
               <div className="col-md-6 mb-3">
                 <div className="card h-100">
-                  <div className="card-header">
+                  <div className="card-header bg-secondary text-white">
                     <h5 className="mb-0">Pantry Items</h5>
                   </div>
                   <div className="card-body">
-                    <ul className="list-unstyled mb-0">
+                    <ul className="list-group list-group-flush">
                       {pantryIngredients.map((ingredient) => (
-                        <li key={ingredient.id} className="mb-1">
-                          {ingredient.name}
+                        <li key={ingredient.id} className="list-group-item px-0 py-2">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`pantry-${ingredient.id}`}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`pantry-${ingredient.id}`}
+                              style={{ fontSize: "1rem" }}
+                            >
+                              {formatIngredientName(ingredient.name)}
+                            </label>
+                          </div>
                         </li>
                       ))}
                     </ul>
