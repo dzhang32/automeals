@@ -13,16 +13,14 @@ export default function Calendar({ droppableId, children }: CalendarProps) {
 
     const style = {
       backgroundColor: isOver ? "#1a3a5c" : "#2d2d2d",
-      border: "1px dashed #555",
-      borderRadius: "3px",
-      padding: "4px",
-      margin: "2px",
-      minHeight: "50px",
+      border: isOver ? "2px solid #4a90d9" : "2px dashed #555",
+      borderRadius: "8px",
+      padding: "12px",
+      minHeight: "80px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      transition: "background-color 0.2s ease",
-      fontSize: "0.7rem",
+      transition: "all 0.2s ease",
     };
 
     return (

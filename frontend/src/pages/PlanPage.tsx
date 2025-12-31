@@ -161,90 +161,57 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="container-fluid p-3">
-        <div className="row h-100">
-          <div className="col-6">
+        <div className="row">
+          <div className="col-12 col-lg-6 mb-4 mb-lg-0">
             <RecipeCards searchQuery={searchQuery} exploreOrPlan="plan" />
           </div>
-          <div className="col-6">
+          <div className="col-12 col-lg-6">
             <div className="row g-2">
               {Object.keys(mealPlan).map((day) => (
                 <div key={day} className="col-12 mb-1">
                   <div className="card">
-                    <div className="card-body p-1">
-                      <h6
-                        className="card-title text-capitalize mb-1"
-                        style={{ fontSize: "0.8rem" }}
-                      >
+                    <div className="card-body p-3">
+                      <h6 className="card-title text-capitalize mb-2 fw-semibold">
                         {day}
                       </h6>
-                      <div className="row g-1">
+                      <div className="row g-2">
                         <div className="col-6">
                           <Calendar droppableId={`${day}-lunch`}>
                             {mealPlan[day].lunch ? (
-                              <div className="text-center">
-                                <div
-                                  style={{
-                                    fontSize: "0.65rem",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                              <div className="text-center w-100">
+                                <div className="small fw-medium mb-1">
                                   {mealPlan[day].lunch.name}
                                 </div>
                                 <button
                                   className="btn btn-sm btn-outline-danger"
-                                  style={{
-                                    fontSize: "0.6rem",
-                                    padding: "1px 4px",
-                                    marginTop: "2px",
-                                  }}
                                   onClick={() => updateMeal(day, "lunch", null)}
+                                  aria-label={`Remove ${mealPlan[day].lunch.name} from lunch`}
                                 >
-                                  ×
+                                  Remove
                                 </button>
                               </div>
                             ) : (
-                              <small
-                                className="text-muted"
-                                style={{ fontSize: "0.6rem" }}
-                              >
-                                Lunch
-                              </small>
+                              <span className="text-muted small">Lunch</span>
                             )}
                           </Calendar>
                         </div>
                         <div className="col-6">
                           <Calendar droppableId={`${day}-dinner`}>
                             {mealPlan[day].dinner ? (
-                              <div className="text-center">
-                                <div
-                                  style={{
-                                    fontSize: "0.65rem",
-                                    fontWeight: "bold",
-                                  }}
-                                >
+                              <div className="text-center w-100">
+                                <div className="small fw-medium mb-1">
                                   {mealPlan[day].dinner.name}
                                 </div>
                                 <button
                                   className="btn btn-sm btn-outline-danger"
-                                  style={{
-                                    fontSize: "0.6rem",
-                                    padding: "1px 4px",
-                                    marginTop: "2px",
-                                  }}
-                                  onClick={() =>
-                                    updateMeal(day, "dinner", null)
-                                  }
+                                  onClick={() => updateMeal(day, "dinner", null)}
+                                  aria-label={`Remove ${mealPlan[day].dinner.name} from dinner`}
                                 >
-                                  ×
+                                  Remove
                                 </button>
                               </div>
                             ) : (
-                              <small
-                                className="text-muted"
-                                style={{ fontSize: "0.6rem" }}
-                              >
-                                Dinner
-                              </small>
+                              <span className="text-muted small">Dinner</span>
                             )}
                           </Calendar>
                         </div>
@@ -260,7 +227,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         <div className="row mt-4">
           <div className="col-md-4 mb-3">
             <div className="card h-100">
-              <div className="card-header bg-primary text-white">
+              <div className="card-header bg-primary text-white d-flex align-items-center gap-2">
+                <span aria-hidden="true">&#9733;</span>
                 <h5 className="mb-0">Core Ingredients</h5>
               </div>
               <div className="card-body">
@@ -298,7 +266,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
           <div className="col-md-4 mb-3">
             <div className="card h-100">
-              <div className="card-header bg-secondary text-white">
+              <div className="card-header bg-secondary text-white d-flex align-items-center gap-2">
+                <span aria-hidden="true">&#9783;</span>
                 <h5 className="mb-0">Pantry</h5>
               </div>
               <div className="card-body">
@@ -336,7 +305,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
           <div className="col-md-4 mb-3">
             <div className="card h-100">
-              <div className="card-header bg-success text-white">
+              <div className="card-header bg-success text-white d-flex align-items-center gap-2">
+                <span aria-hidden="true">&#10003;</span>
                 <h5 className="mb-0">Shopping List</h5>
               </div>
               <div className="card-body">

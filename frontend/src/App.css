@@ -1,1 +1,25 @@
+/* Subtle card border on hover */
+.card {
+  transition: border-color 0.2s ease;
+  border-color: transparent;
+}
 
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Minimal focus state for accessibility */
+.card:focus-within {
+  border-color: rgba(74, 144, 217, 0.5);
+}
+
+/* Checkbox styling */
+.form-check-input {
+  width: 1.1em;
+  height: 1.1em;
+  cursor: pointer;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
