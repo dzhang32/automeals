@@ -1,16 +1,114 @@
-/* Subtle card border on hover */
+/* ========================================
+   Professional Dark Theme Styles
+   ======================================== */
+
+/* Base improvements */
+body {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Typography refinements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Card styling */
 .card {
-  transition: border-color 0.2s ease;
-  border-color: transparent;
+  background-color: #242424;
+  border: 1px solid #333;
+  border-radius: 8px;
 }
 
-.card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+.card-header {
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #333;
+  font-weight: 600;
 }
 
-/* Minimal focus state for accessibility */
-.card:focus-within {
-  border-color: rgba(74, 144, 217, 0.5);
+.card-body {
+  padding: 1rem;
+}
+
+/* Section headers */
+.section-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+/* Button refinements */
+.btn {
+  font-weight: 500;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-outline-secondary {
+  color: #9ca3af;
+  border-color: #4b5563;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.btn-outline-danger {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Navbar refinements */
+.navbar {
+  background-color: #1f1f1f !important;
+  border-bottom: 1px solid #333;
+  padding: 0.75rem 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff !important;
+}
+
+/* Form controls */
+.form-control {
+  background-color: #2a2a2a;
+  border: 1px solid #404040;
+  color: #e0e0e0;
+  border-radius: 6px;
+}
+
+.form-control:focus {
+  background-color: #2a2a2a;
+  border-color: #3b82f6;
+  color: #e0e0e0;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-control::placeholder {
+  color: #6b7280;
 }
 
 /* Checkbox styling */
@@ -18,8 +116,103 @@
   width: 1.1em;
   height: 1.1em;
   cursor: pointer;
+  background-color: #2a2a2a;
+  border-color: #4b5563;
+}
+
+.form-check-input:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
 .form-check-label {
   cursor: pointer;
+}
+
+/* List group refinements */
+.list-group-item {
+  background-color: transparent;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+/* Muted text */
+.text-muted {
+  color: #6b7280 !important;
+}
+
+/* Ingredient columns - refined headers */
+.ingredient-header {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ingredient-header.core {
+  background-color: #1e3a5f;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.ingredient-header.pantry {
+  background-color: #374151;
+  border-bottom: 2px solid #6b7280;
+}
+
+.ingredient-header.shopping {
+  background-color: #14532d;
+  border-bottom: 2px solid #22c55e;
+}
+
+/* Recipe cards in grid */
+.recipe-card,
+.card.h-100 {
+  height: 100%;
+  transition: border-color 0.15s ease;
+}
+
+.recipe-card:hover,
+.card.h-100:hover {
+  border-color: #444;
+}
+
+.recipe-card .card-title,
+.card.h-100 .card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  color: #f0f0f0;
+}
+
+/* Weekly planner cards */
+.day-card {
+  background-color: #1f1f1f;
+}
+
+.day-card .card-title {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+/* Scrollable recipe list */
+.recipe-list {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.recipe-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recipe-list::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.recipe-list::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 3px;
+}
+
+.recipe-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

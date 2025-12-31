@@ -160,34 +160,44 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="container-fluid p-3">
-        <div className="row">
-          <div className="col-12 col-lg-6 mb-4 mb-lg-0">
-            <RecipeCards searchQuery={searchQuery} />
-          </div>
+      <div className="container-fluid p-4">
+        {/* Main content area */}
+        <div className="row g-4">
+          {/* Recipe list */}
           <div className="col-12 col-lg-6">
+            <p className="section-header">Recipes</p>
+            <div className="recipe-list">
+              <RecipeCards searchQuery={searchQuery} />
+            </div>
+          </div>
+
+          {/* Weekly planner */}
+          <div className="col-12 col-lg-6">
+            <p className="section-header">Weekly Plan</p>
             <div className="row g-2">
               {Object.keys(mealPlan).map((day) => (
-                <div key={day} className="col-12 mb-1">
-                  <div className="card">
-                    <div className="card-body p-3">
-                      <h6 className="card-title text-capitalize mb-2 fw-semibold">
-                        {day}
-                      </h6>
-                      <div className="row g-2">
-                        <div className="col-6">
+                <div key={day} className="col-12">
+                  <div className="card day-card">
+                    <div className="card-body py-2 px-3">
+                      <div className="row align-items-center">
+                        <div className="col-2">
+                          <span className="text-capitalize fw-medium" style={{ color: "#9ca3af" }}>
+                            {day.slice(0, 3)}
+                          </span>
+                        </div>
+                        <div className="col-5">
                           <Calendar droppableId={`${day}-lunch`}>
                             {mealPlan[day].lunch ? (
-                              <div className="text-center w-100">
-                                <div className="small fw-medium mb-1">
+                              <div className="d-flex align-items-center justify-content-between w-100">
+                                <span className="small fw-medium text-truncate me-2">
                                   {mealPlan[day].lunch.name}
-                                </div>
+                                </span>
                                 <button
-                                  className="btn btn-sm btn-outline-danger"
+                                  className="btn btn-sm btn-outline-danger flex-shrink-0"
                                   onClick={() => updateMeal(day, "lunch", null)}
-                                  aria-label={`Remove ${mealPlan[day].lunch.name} from lunch`}
+                                  aria-label={`Remove ${mealPlan[day].lunch.name}`}
                                 >
-                                  Remove
+                                  ×
                                 </button>
                               </div>
                             ) : (
@@ -195,19 +205,19 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                             )}
                           </Calendar>
                         </div>
-                        <div className="col-6">
+                        <div className="col-5">
                           <Calendar droppableId={`${day}-dinner`}>
                             {mealPlan[day].dinner ? (
-                              <div className="text-center w-100">
-                                <div className="small fw-medium mb-1">
+                              <div className="d-flex align-items-center justify-content-between w-100">
+                                <span className="small fw-medium text-truncate me-2">
                                   {mealPlan[day].dinner.name}
-                                </div>
+                                </span>
                                 <button
-                                  className="btn btn-sm btn-outline-danger"
+                                  className="btn btn-sm btn-outline-danger flex-shrink-0"
                                   onClick={() => updateMeal(day, "dinner", null)}
-                                  aria-label={`Remove ${mealPlan[day].dinner.name} from dinner`}
+                                  aria-label={`Remove ${mealPlan[day].dinner.name}`}
                                 >
-                                  Remove
+                                  ×
                                 </button>
                               </div>
                             ) : (
@@ -224,18 +234,18 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
         </div>
 
-        <div className="row mt-4">
-          <div className="col-md-4 mb-3">
+        {/* Ingredients section */}
+        <div className="row g-3 mt-4">
+          <div className="col-md-4">
             <div className="card h-100">
-              <div className="card-header bg-primary text-white d-flex align-items-center gap-2">
-                <span aria-hidden="true">&#9733;</span>
-                <h5 className="mb-0">Core Ingredients</h5>
+              <div className="ingredient-header core text-white">
+                Core Ingredients
               </div>
               <div className="card-body">
                 {coreIngredients.length > 0 ? (
                   <ul className="list-group list-group-flush">
                     {coreIngredients.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -247,7 +257,6 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                           <label
                             className="form-check-label"
                             htmlFor={`core-${ingredient.id}`}
-                            style={{ fontSize: "1rem" }}
                           >
                             {formatIngredientName(ingredient.name)}
                           </label>
@@ -256,25 +265,24 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-muted mb-0">
-                    Core ingredients will appear here when you add recipes to your meal plan.
+                  <p className="text-muted small mb-0">
+                    Add recipes to see ingredients
                   </p>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="col-md-4 mb-3">
+          <div className="col-md-4">
             <div className="card h-100">
-              <div className="card-header bg-secondary text-white d-flex align-items-center gap-2">
-                <span aria-hidden="true">&#9783;</span>
-                <h5 className="mb-0">Pantry</h5>
+              <div className="ingredient-header pantry text-white">
+                Pantry
               </div>
               <div className="card-body">
                 {pantryIngredients.length > 0 ? (
                   <ul className="list-group list-group-flush">
                     {pantryIngredients.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -286,7 +294,6 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                           <label
                             className="form-check-label"
                             htmlFor={`pantry-${ingredient.id}`}
-                            style={{ fontSize: "1rem" }}
                           >
                             {formatIngredientName(ingredient.name)}
                           </label>
@@ -295,32 +302,31 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-muted mb-0">
-                    Pantry items will appear here when you add recipes to your meal plan.
+                  <p className="text-muted small mb-0">
+                    Add recipes to see pantry items
                   </p>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="col-md-4 mb-3">
+          <div className="col-md-4">
             <div className="card h-100">
-              <div className="card-header bg-success text-white d-flex align-items-center gap-2">
-                <span aria-hidden="true">&#10003;</span>
-                <h5 className="mb-0">Shopping List</h5>
+              <div className="ingredient-header shopping text-white">
+                Shopping List
               </div>
               <div className="card-body">
                 {shoppingList.length > 0 ? (
                   <ul className="list-group list-group-flush">
                     {shoppingList.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
                         {formatIngredientName(ingredient.name)}
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-muted mb-0">
-                    Check items from Core Ingredients or Pantry to add them to your shopping list.
+                  <p className="text-muted small mb-0">
+                    Check ingredients to add to list
                   </p>
                 )}
               </div>

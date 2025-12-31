@@ -12,15 +12,15 @@ export default function Calendar({ droppableId, children }: CalendarProps) {
     });
 
     const style = {
-      backgroundColor: isOver ? "#1a3a5c" : "#2d2d2d",
-      border: isOver ? "2px solid #4a90d9" : "2px dashed #555",
-      borderRadius: "8px",
-      padding: "12px",
-      minHeight: "80px",
+      backgroundColor: isOver ? "#1e3a5f" : "#1f1f1f",
+      border: isOver ? "1px solid #3b82f6" : "1px solid #333",
+      borderRadius: "6px",
+      padding: "8px 12px",
+      minHeight: "40px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      transition: "all 0.2s ease",
+      transition: "background-color 0.15s ease, border-color 0.15s ease",
     };
 
     return (
