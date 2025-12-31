@@ -104,7 +104,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   };
 
   // Collect all unique ingredients from the meal plan and separate by type
-  const { coreIngredients, pantryIngredients, shoppingList } = useMemo(() => {
+  const { coreIngredients, pantryIngredients, allIngredients } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
 
     Object.values(mealPlan).forEach((day) => {
@@ -117,26 +117,46 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       });
     });
 
-    const allIngredients = Array.from(ingredientsMap.values());
+    const all = Array.from(ingredientsMap.values());
 
-    const core = allIngredients
+    const core = all
       .filter((ing) => ing.core)
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    const pantry = allIngredients
+    const pantry = all
       .filter((ing) => !ing.core)
-      .sort((a, b) => a.name.localeCompare(b.name));
-
-    const checked = allIngredients
-      .filter((ing) => checkedIngredients.has(ing.id))
       .sort((a, b) => a.name.localeCompare(b.name));
 
     return {
       coreIngredients: core,
       pantryIngredients: pantry,
-      shoppingList: checked,
+      allIngredients: all,
     };
-  }, [mealPlan, checkedIngredients]);
+  }, [mealPlan]);
+
+  // Compute shopping list separately to avoid infinite loop
+  const shoppingList = useMemo(() => {
+    return allIngredients
+      .filter((ing) => checkedIngredients.has(ing.id))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [allIngredients, checkedIngredients]);
+
+  // Automatically check all core ingredients when they appear
+  useEffect(() => {
+    if (coreIngredients.length === 0) return;
+
+    setCheckedIngredients((prev) => {
+      const newSet = new Set(prev);
+      let changed = false;
+      coreIngredients.forEach((ingredient) => {
+        if (!newSet.has(ingredient.id)) {
+          newSet.add(ingredient.id);
+          changed = true;
+        }
+      });
+      return changed ? newSet : prev;
+    });
+  }, [coreIngredients]);
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -237,100 +257,106 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
         </div>
 
-        {(coreIngredients.length > 0 || pantryIngredients.length > 0) && (
-          <div className="row mt-4">
-            {coreIngredients.length > 0 && (
-              <div className="col-md-4 mb-3">
-                <div className="card h-100">
-                  <div className="card-header bg-primary text-white">
-                    <h5 className="mb-0">Core Ingredients</h5>
-                  </div>
-                  <div className="card-body">
-                    <ul className="list-group list-group-flush">
-                      {coreIngredients.map((ingredient) => (
-                        <li key={ingredient.id} className="list-group-item px-0 py-2">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id={`core-${ingredient.id}`}
-                              checked={checkedIngredients.has(ingredient.id)}
-                              onChange={() => toggleIngredient(ingredient.id)}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`core-${ingredient.id}`}
-                              style={{ fontSize: "1rem" }}
-                            >
-                              {formatIngredientName(ingredient.name)}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+        <div className="row mt-4">
+          <div className="col-md-4 mb-3">
+            <div className="card h-100">
+              <div className="card-header bg-primary text-white">
+                <h5 className="mb-0">Core Ingredients</h5>
               </div>
-            )}
-
-            {pantryIngredients.length > 0 && (
-              <div className="col-md-4 mb-3">
-                <div className="card h-100">
-                  <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">Pantry</h5>
-                  </div>
-                  <div className="card-body">
-                    <ul className="list-group list-group-flush">
-                      {pantryIngredients.map((ingredient) => (
-                        <li key={ingredient.id} className="list-group-item px-0 py-2">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id={`pantry-${ingredient.id}`}
-                              checked={checkedIngredients.has(ingredient.id)}
-                              onChange={() => toggleIngredient(ingredient.id)}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`pantry-${ingredient.id}`}
-                              style={{ fontSize: "1rem" }}
-                            >
-                              {formatIngredientName(ingredient.name)}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="col-md-4 mb-3">
-              <div className="card h-100">
-                <div className="card-header bg-success text-white">
-                  <h5 className="mb-0">Shopping List</h5>
-                </div>
-                <div className="card-body">
-                  {shoppingList.length > 0 ? (
-                    <ul className="list-group list-group-flush">
-                      {shoppingList.map((ingredient) => (
-                        <li key={ingredient.id} className="list-group-item px-0 py-2">
-                          {formatIngredientName(ingredient.name)}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted mb-0">
-                      Check items from Core Ingredients or Pantry to add them to your shopping list.
-                    </p>
-                  )}
-                </div>
+              <div className="card-body">
+                {coreIngredients.length > 0 ? (
+                  <ul className="list-group list-group-flush">
+                    {coreIngredients.map((ingredient) => (
+                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`core-${ingredient.id}`}
+                            checked={checkedIngredients.has(ingredient.id)}
+                            onChange={() => toggleIngredient(ingredient.id)}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`core-${ingredient.id}`}
+                            style={{ fontSize: "1rem" }}
+                          >
+                            {formatIngredientName(ingredient.name)}
+                          </label>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-muted mb-0">
+                    Core ingredients will appear here when you add recipes to your meal plan.
+                  </p>
+                )}
               </div>
             </div>
           </div>
-        )}
+
+          <div className="col-md-4 mb-3">
+            <div className="card h-100">
+              <div className="card-header bg-secondary text-white">
+                <h5 className="mb-0">Pantry</h5>
+              </div>
+              <div className="card-body">
+                {pantryIngredients.length > 0 ? (
+                  <ul className="list-group list-group-flush">
+                    {pantryIngredients.map((ingredient) => (
+                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`pantry-${ingredient.id}`}
+                            checked={checkedIngredients.has(ingredient.id)}
+                            onChange={() => toggleIngredient(ingredient.id)}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`pantry-${ingredient.id}`}
+                            style={{ fontSize: "1rem" }}
+                          >
+                            {formatIngredientName(ingredient.name)}
+                          </label>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-muted mb-0">
+                    Pantry items will appear here when you add recipes to your meal plan.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4 mb-3">
+            <div className="card h-100">
+              <div className="card-header bg-success text-white">
+                <h5 className="mb-0">Shopping List</h5>
+              </div>
+              <div className="card-body">
+                {shoppingList.length > 0 ? (
+                  <ul className="list-group list-group-flush">
+                    {shoppingList.map((ingredient) => (
+                      <li key={ingredient.id} className="list-group-item px-0 py-2">
+                        {formatIngredientName(ingredient.name)}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-muted mb-0">
+                    Check items from Core Ingredients or Pantry to add them to your shopping list.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </DndContext>
   );
