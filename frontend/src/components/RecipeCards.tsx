@@ -78,7 +78,7 @@ export default function RecipeCards({
       opacity: isDragging ? 0.8 : 1,
       cursor: "grab",
       zIndex: isDragging ? 9999 : 1,
-      position: isDragging ? "relative" : "static",
+      position: (isDragging ? "relative" : "static") as "relative" | "static",
     };
 
     return (

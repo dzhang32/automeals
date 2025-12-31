@@ -1,8 +1,8 @@
 import RecipeCards from "../components/RecipeCards";
 import { DndContext, type Over } from "@dnd-kit/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Calendar from "../components/Calendar";
-import type { Recipe, TidyRecipe } from "../types/recipe";
+import type { Recipe, TidyRecipe, Ingredient } from "../types/recipe";
 import tidyRecipe from "../utils/tidyRecipe";
 
 interface PlanPageProps {
@@ -36,12 +36,27 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         res.sort((a: Recipe, b: Recipe) => a.name.localeCompare(b.name))
       )
       .then((data: Recipe[]) => {
-        setRecipes(data.map(tidyRecipe));
+        const recipesWithIngredients = data.map((recipe: Recipe) => ({
+          ...recipe,
+          ingredients: [],
+        }));
+        setRecipes(recipesWithIngredients.map(tidyRecipe));
       })
       .catch(() => setRecipes(null));
   }, []);
 
-  const updateMeal = (day: string, meal: string, recipe: TidyRecipe | null) => {
+  const updateMeal = async (day: string, meal: string, recipe: TidyRecipe | null) => {
+    if (recipe && recipe.ingredients.length === 0) {
+      try {
+        const response = await fetch(`http://localhost:8000/recipes/${recipe.id}/ingredients`);
+        const ingredients = await response.json();
+        recipe = { ...recipe, ingredients };
+      } catch (error) {
+        console.error('Failed to fetch ingredients:', error);
+        recipe = { ...recipe, ingredients: [] };
+      }
+    }
+
     setMealPlan((prev) => ({
       ...prev,
       [day]: {
@@ -51,7 +66,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     }));
   };
 
-  function handleDragEnd({ over, active }: { over: Over | null; active: any }) {
+  async function handleDragEnd({ over, active }: { over: Over | null; active: any }) {
     if (over && typeof over.id === "string" && recipes) {
       // Parse the droppable ID to extract day and meal type
       // Format: "day-meal" (e.g., "monday-lunch")
@@ -60,12 +75,31 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         // Find the recipe by ID
         const recipe = recipes.find((r) => r.id.toString() === active.id);
         if (recipe) {
-          updateMeal(day, meal, recipe);
+          await updateMeal(day, meal, recipe);
           console.log(`Recipe "${recipe.name}" dropped on ${day} ${meal}`);
         }
       }
     }
   }
+
+  // Collect all unique ingredients from the meal plan
+  const allIngredients = useMemo(() => {
+    const ingredientsMap = new Map<number, Ingredient>();
+
+    Object.values(mealPlan).forEach((day) => {
+      [day.lunch, day.dinner].forEach((recipe) => {
+        if (recipe?.ingredients) {
+          recipe.ingredients.forEach((ingredient) => {
+            ingredientsMap.set(ingredient.id, ingredient);
+          });
+        }
+      });
+    });
+
+    return Array.from(ingredientsMap.values()).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+  }, [mealPlan]);
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -165,6 +199,36 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
             </div>
           </div>
         </div>
+
+        {allIngredients.length > 0 && (
+          <div className="row mt-4">
+            <div className="col-12">
+              <div className="card">
+                <div className="card-header">
+                  <h5 className="mb-0">Shopping List</h5>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-12">
+                      <ul className="list-unstyled mb-0">
+                        {allIngredients.map((ingredient) => (
+                          <li key={ingredient.id} className="mb-1">
+                            {ingredient.name}
+                            {!ingredient.core && (
+                              <span className="badge bg-secondary ms-2">
+                                Pantry
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DndContext>
   );
