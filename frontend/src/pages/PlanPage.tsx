@@ -181,7 +181,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                     <div className="card-body py-2 px-3">
                       <div className="row align-items-center">
                         <div className="col-2">
-                          <span className="text-capitalize fw-medium" style={{ color: "#9ca3af" }}>
+                          <span className="text-capitalize fw-medium" style={{ color: "#ffffff" }}>
                             {day.slice(0, 3)}
                           </span>
                         </div>

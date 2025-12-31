@@ -12,9 +12,9 @@ export default function Calendar({ droppableId, children }: CalendarProps) {
     });
 
     const style = {
-      backgroundColor: isOver ? "#1e3a5f" : "#1f1f1f",
-      border: isOver ? "1px solid #3b82f6" : "1px solid #333",
-      borderRadius: "6px",
+      backgroundColor: isOver ? "rgba(126, 200, 155, 0.15)" : "#1e2433",
+      border: isOver ? "1px solid #7ec89b" : "1px solid #2d3548",
+      borderRadius: "8px",
       padding: "8px 12px",
       minHeight: "40px",
       display: "flex",

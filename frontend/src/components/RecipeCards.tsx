@@ -3,7 +3,7 @@ import type { Recipe, TidyRecipe } from "../types/recipe";
 import InstructionsModal from "./InstructionsModal";
 import tidyRecipe from "../utils/tidyRecipe";
 import Fuse from "fuse.js";
-import { useDraggable, DragOverlay } from "@dnd-kit/core";
+import { useDraggable, DragOverlay, useDndMonitor } from "@dnd-kit/core";
 
 interface RecipeCardsProps {
   searchQuery: string;
@@ -41,18 +41,18 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
     return fuse.search(searchQuery).map((result) => result.item);
   }, [searchQuery, fuse, recipes]);
 
+  // Track drag state using dnd-kit monitor
+  useDndMonitor({
+    onDragStart: (event) => setActiveId(event.active.id.toString()),
+    onDragEnd: () => setActiveId(null),
+    onDragCancel: () => setActiveId(null),
+  });
+
   const RecipeCard = ({ recipe }: { recipe: TidyRecipe }) => {
     const { attributes, listeners, setNodeRef, isDragging } =
       useDraggable({
         id: recipe.id.toString(),
       });
-
-    // Track active drag
-    useEffect(() => {
-      if (isDragging) {
-        setActiveId(recipe.id.toString());
-      }
-    }, [isDragging, recipe.id]);
 
     return (
       <div className="col">
@@ -60,25 +60,27 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
           ref={setNodeRef}
           {...listeners}
           {...attributes}
-          className="card h-100"
+          className="card recipe-card"
           style={{
             opacity: isDragging ? 0.4 : 1,
             cursor: "grab",
           }}
         >
-          <div className="card-body d-flex flex-column">
+          <div className="card-body">
             <h5 className="card-title">{recipe.name}</h5>
-            <div className="mt-auto">
+            <div className="card-actions">
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="btn btn-view"
                 data-bs-toggle="modal"
                 data-bs-target="#instructionsModal"
                 onClick={() => setSelectedRecipe(recipe)}
+                onPointerDown={(e) => e.stopPropagation()}
               >
-                Instructions
+                View Recipe
               </button>
             </div>
+            <span className="drag-indicator">Drag to plan</span>
           </div>
         </div>
       </div>
@@ -91,26 +93,29 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
 
   return (
     <>
-      <div className="container">
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-xl-3 g-3">
-          {filteredRecipes?.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
-        <InstructionsModal recipe={selectedRecipe} />
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+        {filteredRecipes?.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
+        ))}
       </div>
+      <InstructionsModal recipe={selectedRecipe} />
       <DragOverlay>
         {activeRecipe ? (
           <div
-            className="card"
+            className="card recipe-card"
             style={{
               width: "200px",
               cursor: "grabbing",
-              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+              boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
+              borderColor: "#7ec89b",
+              aspectRatio: "auto",
+              minHeight: "auto",
             }}
           >
-            <div className="card-body py-2 px-3">
-              <span className="small fw-medium">{activeRecipe.name}</span>
+            <div className="card-body" style={{ padding: "12px 16px" }}>
+              <span className="fw-medium" style={{ fontSize: "0.875rem" }}>
+                {activeRecipe.name}
+              </span>
             </div>
           </div>
         ) : null}
