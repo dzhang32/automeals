@@ -3,7 +3,7 @@ import type { Recipe, TidyRecipe } from "../types/recipe";
 import InstructionsModal from "./InstructionsModal";
 import tidyRecipe from "../utils/tidyRecipe";
 import Fuse from "fuse.js";
-import { useDraggable } from "@dnd-kit/core";
+import { useDraggable, DragOverlay } from "@dnd-kit/core";
 
 interface RecipeCardsProps {
   searchQuery: string;
@@ -12,6 +12,7 @@ interface RecipeCardsProps {
 export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/recipes")
@@ -41,27 +42,33 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   }, [searchQuery, fuse, recipes]);
 
   const RecipeCard = ({ recipe }: { recipe: TidyRecipe }) => {
-    const { attributes, listeners, setNodeRef, transform, isDragging } =
+    const { attributes, listeners, setNodeRef, isDragging } =
       useDraggable({
         id: recipe.id.toString(),
       });
 
-    const dragButtonStyle = {
-      transform: transform
-        ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-        : undefined,
-      opacity: isDragging ? 0.8 : 1,
-      zIndex: isDragging ? 9999 : 1,
-      position: (isDragging ? "fixed" : "static") as "fixed" | "static",
-      cursor: "grab",
-    };
+    // Track active drag
+    useEffect(() => {
+      if (isDragging) {
+        setActiveId(recipe.id.toString());
+      }
+    }, [isDragging, recipe.id]);
 
     return (
       <div className="col">
-        <div className="card h-100">
+        <div
+          ref={setNodeRef}
+          {...listeners}
+          {...attributes}
+          className="card h-100"
+          style={{
+            opacity: isDragging ? 0.4 : 1,
+            cursor: "grab",
+          }}
+        >
           <div className="card-body d-flex flex-column">
             <h5 className="card-title">{recipe.name}</h5>
-            <div className="mt-auto d-flex gap-2">
+            <div className="mt-auto">
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
@@ -71,21 +78,16 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
               >
                 Instructions
               </button>
-              <button
-                ref={setNodeRef}
-                {...listeners}
-                {...attributes}
-                className="btn btn-outline-secondary btn-sm"
-                style={dragButtonStyle}
-              >
-                Drag to add
-              </button>
             </div>
           </div>
         </div>
       </div>
     );
   };
+
+  const activeRecipe = activeId
+    ? filteredRecipes?.find((r) => r.id.toString() === activeId)
+    : null;
 
   return (
     <>
@@ -97,6 +99,22 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
         </div>
         <InstructionsModal recipe={selectedRecipe} />
       </div>
+      <DragOverlay>
+        {activeRecipe ? (
+          <div
+            className="card"
+            style={{
+              width: "200px",
+              cursor: "grabbing",
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            <div className="card-body py-2 px-3">
+              <span className="small fw-medium">{activeRecipe.name}</span>
+            </div>
+          </div>
+        ) : null}
+      </DragOverlay>
     </>
   );
 }
