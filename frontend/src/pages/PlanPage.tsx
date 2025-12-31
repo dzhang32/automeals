@@ -27,6 +27,9 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     saturday: { lunch: null, dinner: null },
     sunday: { lunch: null, dinner: null },
   });
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(
+    new Set()
+  );
 
   // Fetch recipes to have access to recipe data for lookups
   useEffect(() => {
@@ -88,8 +91,20 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+  const toggleIngredient = (ingredientId: number) => {
+    setCheckedIngredients((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(ingredientId)) {
+        newSet.delete(ingredientId);
+      } else {
+        newSet.add(ingredientId);
+      }
+      return newSet;
+    });
+  };
+
   // Collect all unique ingredients from the meal plan and separate by type
-  const { coreIngredients, pantryIngredients } = useMemo(() => {
+  const { coreIngredients, pantryIngredients, shoppingList } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
 
     Object.values(mealPlan).forEach((day) => {
@@ -104,15 +119,24 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
     const allIngredients = Array.from(ingredientsMap.values());
 
+    const core = allIngredients
+      .filter((ing) => ing.core)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const pantry = allIngredients
+      .filter((ing) => !ing.core)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const checked = allIngredients
+      .filter((ing) => checkedIngredients.has(ing.id))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
     return {
-      coreIngredients: allIngredients
-        .filter((ing) => ing.core)
-        .sort((a, b) => a.name.localeCompare(b.name)),
-      pantryIngredients: allIngredients
-        .filter((ing) => !ing.core)
-        .sort((a, b) => a.name.localeCompare(b.name)),
+      coreIngredients: core,
+      pantryIngredients: pantry,
+      shoppingList: checked,
     };
-  }, [mealPlan]);
+  }, [mealPlan, checkedIngredients]);
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -216,10 +240,10 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         {(coreIngredients.length > 0 || pantryIngredients.length > 0) && (
           <div className="row mt-4">
             {coreIngredients.length > 0 && (
-              <div className="col-md-6 mb-3">
+              <div className="col-md-4 mb-3">
                 <div className="card h-100">
                   <div className="card-header bg-primary text-white">
-                    <h5 className="mb-0">Shopping List</h5>
+                    <h5 className="mb-0">Core Ingredients</h5>
                   </div>
                   <div className="card-body">
                     <ul className="list-group list-group-flush">
@@ -230,6 +254,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                               className="form-check-input"
                               type="checkbox"
                               id={`core-${ingredient.id}`}
+                              checked={checkedIngredients.has(ingredient.id)}
+                              onChange={() => toggleIngredient(ingredient.id)}
                             />
                             <label
                               className="form-check-label"
@@ -248,10 +274,10 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
             )}
 
             {pantryIngredients.length > 0 && (
-              <div className="col-md-6 mb-3">
+              <div className="col-md-4 mb-3">
                 <div className="card h-100">
                   <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">Pantry Items</h5>
+                    <h5 className="mb-0">Pantry</h5>
                   </div>
                   <div className="card-body">
                     <ul className="list-group list-group-flush">
@@ -262,6 +288,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                               className="form-check-input"
                               type="checkbox"
                               id={`pantry-${ingredient.id}`}
+                              checked={checkedIngredients.has(ingredient.id)}
+                              onChange={() => toggleIngredient(ingredient.id)}
                             />
                             <label
                               className="form-check-label"
@@ -278,6 +306,29 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                 </div>
               </div>
             )}
+
+            <div className="col-md-4 mb-3">
+              <div className="card h-100">
+                <div className="card-header bg-success text-white">
+                  <h5 className="mb-0">Shopping List</h5>
+                </div>
+                <div className="card-body">
+                  {shoppingList.length > 0 ? (
+                    <ul className="list-group list-group-flush">
+                      {shoppingList.map((ingredient) => (
+                        <li key={ingredient.id} className="list-group-item px-0 py-2">
+                          {formatIngredientName(ingredient.name)}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted mb-0">
+                      Check items from Core Ingredients or Pantry to add them to your shopping list.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
