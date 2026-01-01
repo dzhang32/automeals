@@ -8,9 +8,17 @@ import { fetchRecipes } from "../utils/api";
 
 interface RecipeCardsProps {
   searchQuery: string;
+  isMobile?: boolean;
+  selectedRecipeId?: string | null;
+  onRecipeSelect?: (recipeId: string) => void;
 }
 
-export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
+export default function RecipeCards({
+  searchQuery,
+  isMobile,
+  selectedRecipeId,
+  onRecipeSelect,
+}: RecipeCardsProps) {
   const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,20 +53,31 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   });
 
   const RecipeCard = ({ recipe }: { recipe: TidyRecipe }) => {
-    const { attributes, listeners, setNodeRef, isDragging } =
-      useDraggable({
-        id: recipe.id.toString(),
-      });
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+      id: recipe.id.toString(),
+      disabled: isMobile,
+    });
+
+    const isSelected = isMobile && selectedRecipeId === recipe.id.toString();
+    const dragProps = isMobile ? {} : { ...listeners, ...attributes };
+
+    const handleClick = () => {
+      if (isMobile && onRecipeSelect) {
+        onRecipeSelect(recipe.id.toString());
+      }
+    };
 
     return (
       <div
         ref={setNodeRef}
-        {...listeners}
-        {...attributes}
+        {...dragProps}
+        onClick={handleClick}
         className="card recipe-card"
         style={{
           opacity: isDragging ? 0.4 : 1,
-          cursor: "grab",
+          cursor: isMobile ? "pointer" : "grab",
+          borderColor: isSelected ? "#3b82f6" : undefined,
+          backgroundColor: isSelected ? "rgba(59, 130, 246, 0.1)" : undefined,
         }}
       >
         <div className="card-body">
@@ -76,7 +95,9 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
               View Recipe
             </button>
           </div>
-          <span className="drag-indicator">Drag to plan</span>
+          <span className="drag-indicator">
+            {isMobile ? "Tap to select" : "Drag to plan"}
+          </span>
         </div>
       </div>
     );
@@ -98,27 +119,29 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <DragOverlay>
-        {activeRecipe ? (
-          <div
-            className="card recipe-card"
-            style={{
-              width: "200px",
-              cursor: "grabbing",
-              boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
-              borderColor: "#3b82f6",
-              aspectRatio: "auto",
-              minHeight: "auto",
-            }}
-          >
-            <div className="p-3">
-              <span className="font-medium text-sm">
-                {activeRecipe.name}
-              </span>
+      {!isMobile && (
+        <DragOverlay>
+          {activeRecipe ? (
+            <div
+              className="card recipe-card"
+              style={{
+                width: "200px",
+                cursor: "grabbing",
+                boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
+                borderColor: "#3b82f6",
+                aspectRatio: "auto",
+                minHeight: "auto",
+              }}
+            >
+              <div className="p-3">
+                <span className="font-medium text-sm">
+                  {activeRecipe.name}
+                </span>
+              </div>
             </div>
-          </div>
-        ) : null}
-      </DragOverlay>
+          ) : null}
+        </DragOverlay>
+      )}
     </>
   );
 }

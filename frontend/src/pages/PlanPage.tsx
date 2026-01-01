@@ -5,6 +5,7 @@ import Calendar from "../components/Calendar";
 import type { Recipe, TidyRecipe, Ingredient } from "../types/recipe";
 import tidyRecipe from "../utils/tidyRecipe";
 import { API_BASE_URL } from "../utils/api";
+import { useIsMobile } from "../utils/useIsMobile";
 
 interface PlanPageProps {
   searchQuery: string;
@@ -31,6 +32,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(
     new Set()
   );
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   // Fetch recipes to have access to recipe data for lookups
   useEffect(() => {
@@ -85,6 +88,20 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       }
     }
   }
+
+  const handleRecipeSelect = (recipeId: string) => {
+    setSelectedRecipeId((prev) => (prev === recipeId ? null : recipeId));
+  };
+
+  const handleSlotClick = async (day: string, meal: string) => {
+    if (!isMobile || !selectedRecipeId || !recipes) return;
+
+    const recipe = recipes.find((r) => r.id.toString() === selectedRecipeId);
+    if (recipe) {
+      await updateMeal(day, meal, recipe);
+      setSelectedRecipeId(null); // Auto-deselect after assignment
+    }
+  };
 
   const formatIngredientName = (name: string): string => {
     return name
@@ -186,7 +203,12 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           <div>
             <p className="section-header px-4">Recipes</p>
             <div className="recipe-list">
-              <RecipeCards searchQuery={searchQuery} />
+              <RecipeCards
+                searchQuery={searchQuery}
+                isMobile={isMobile}
+                selectedRecipeId={selectedRecipeId}
+                onRecipeSelect={handleRecipeSelect}
+              />
             </div>
           </div>
 
@@ -204,7 +226,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                         </span>
                       </div>
                       <div className="w-[41.67%] pr-2">
-                        <Calendar droppableId={`${day}-lunch`}>
+                        <Calendar
+                          droppableId={`${day}-lunch`}
+                          isMobile={isMobile}
+                          onClick={() => handleSlotClick(day, "lunch")}
+                        >
                           {mealPlan[day].lunch ? (
                             <div className="flex items-center justify-between w-full">
                               <span className="text-sm font-medium truncate mr-2">
@@ -224,7 +250,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                         </Calendar>
                       </div>
                       <div className="w-[41.67%]">
-                        <Calendar droppableId={`${day}-dinner`}>
+                        <Calendar
+                          droppableId={`${day}-dinner`}
+                          isMobile={isMobile}
+                          onClick={() => handleSlotClick(day, "dinner")}
+                        >
                           {mealPlan[day].dinner ? (
                             <div className="flex items-center justify-between w-full">
                               <span className="text-sm font-medium truncate mr-2">
