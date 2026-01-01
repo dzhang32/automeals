@@ -116,7 +116,7 @@
 
   /* Recipe list */
   .recipe-list {
-    @apply max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden py-1 px-4 -my-1 -mx-4;
+    @apply max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden py-1 px-4 -my-1;
   }
 
   .recipe-list::-webkit-scrollbar {

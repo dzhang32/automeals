@@ -173,8 +173,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
           {/* Weekly planner */}
           <div>
-            <p className="section-header">Weekly Plan</p>
-            <div className="flex flex-col gap-3">
+            <p className="section-header px-4">Weekly Plan</p>
+            <div className="flex flex-col gap-3 px-4">
               {Object.keys(mealPlan).map((day) => (
                 <div key={day} className="card day-card">
                   <div className="card-body py-3 px-4">
