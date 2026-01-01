@@ -9,7 +9,7 @@ export default function NavigationBar({ onSearch }: NavigationBarProps) {
         <span className="navbar-brand">automeals</span>
         <div className="flex items-center">
           <input
-            className="form-input w-[280px]"
+            className="form-input w-[140px] sm:w-[280px]"
             type="search"
             placeholder="Search recipes..."
             aria-label="Search recipes"
