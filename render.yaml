@@ -17,7 +17,6 @@ services:
   - type: web
     name: automeals-frontend
     runtime: static
-    region: oregon
     buildCommand: "cd frontend && yarn install && yarn build"
     staticPublishPath: frontend/dist
     routes:
