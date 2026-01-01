@@ -111,7 +111,7 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
               width: "200px",
               cursor: "grabbing",
               boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
-              borderColor: "#7ec89b",
+              borderColor: "#3b82f6",
               aspectRatio: "auto",
               minHeight: "auto",
             }}

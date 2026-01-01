@@ -103,6 +103,24 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     });
   };
 
+  const downloadShoppingList = () => {
+    if (shoppingList.length === 0) return;
+
+    const csvContent = shoppingList
+      .map((ingredient) => `${formatIngredientName(ingredient.name)},1`)
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "shopping_list.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // Collect all unique ingredients from the meal plan and separate by type
   const { coreIngredients, pantryIngredients, allIngredients } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
@@ -296,8 +314,17 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
 
           <div className="card h-full">
-            <div className="ingredient-header">
-              Shopping List
+            <div className="ingredient-header flex items-center justify-between">
+              <span>Shopping List</span>
+              {shoppingList.length > 0 && (
+                <button
+                  className="btn btn-sm btn-outline-light"
+                  onClick={downloadShoppingList}
+                  title="Download shopping list as CSV"
+                >
+                  Download CSV
+                </button>
+              )}
             </div>
             <div className="card-body">
               {shoppingList.length > 0 ? (

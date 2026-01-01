@@ -14,7 +14,7 @@ export default function InstructionsModal({ recipe, isOpen, onClose }: Instructi
         <ol className="flex flex-col gap-2">
           {recipe.instructions.map((instruction, index) => (
             <li key={index} className="list-item flex gap-3">
-              <span className="text-accent-mint font-medium">{index + 1}. </span>
+              <span className="font-medium">{index + 1}. </span>
               <span>{instruction}</span>
             </li>
           ))}
