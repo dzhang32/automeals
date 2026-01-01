@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-backend:
-    name: Test Backend
+    name: Test backend
     runs-on: ubuntu-latest
     
     steps:
@@ -32,7 +32,7 @@ jobs:
           pytest tests/ -v
 
   test-frontend:
-    name: Test Frontend
+    name: Test frontend
     runs-on: ubuntu-latest
 
     steps:

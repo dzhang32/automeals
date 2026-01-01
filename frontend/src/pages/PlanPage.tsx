@@ -1,5 +1,5 @@
 import RecipeCards from "../components/RecipeCards";
-import { DndContext, type Over } from "@dnd-kit/core";
+import { DndContext, type Over, type Active } from "@dnd-kit/core";
 import { useState, useEffect, useMemo } from "react";
 import Calendar from "../components/Calendar";
 import type { Recipe, TidyRecipe, Ingredient } from "../types/recipe";
@@ -70,7 +70,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     }));
   };
 
-  async function handleDragEnd({ over, active }: { over: Over | null; active: any }) {
+  async function handleDragEnd({ over, active }: { over: Over | null; active: Active }) {
     if (over && typeof over.id === "string" && recipes) {
       // Parse the droppable ID to extract day and meal type
       // Format: "day-meal" (e.g., "monday-lunch")
