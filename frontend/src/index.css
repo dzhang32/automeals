@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layer */
+@layer base {
+  body {
+    @apply bg-bg-primary text-text-primary font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-text-primary;
+  }
+}
+
+/* Component layer */
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-bg-card border border-border-color rounded-xl;
+  }
+
+  .card-header {
+    @apply bg-bg-secondary border-b border-border-color font-semibold;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  /* Section headers */
+  .section-header {
+    @apply text-xs font-semibold uppercase tracking-widest text-text-secondary mb-4;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply font-medium rounded-3xl text-sm py-2 px-5 transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-sm {
+    @apply py-1.5 px-4 rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-accent-coral border border-accent-coral text-white hover:bg-accent-coral-hover hover:border-accent-coral-hover;
+  }
+
+  .btn-outline-secondary {
+    @apply text-text-secondary border border-border-light bg-transparent hover:bg-bg-card-hover hover:text-text-primary;
+  }
+
+  .btn-outline-danger {
+    @apply text-xs py-1 px-2.5 rounded-2xl text-accent-coral border border-accent-coral bg-transparent hover:bg-accent-coral hover:text-white cursor-pointer;
+  }
+
+  /* Navbar */
+  .navbar {
+    @apply bg-bg-primary border-b border-border-color py-4 px-6;
+  }
+
+  .navbar-brand {
+    @apply text-xl font-bold text-text-primary;
+  }
+
+  /* Form controls */
+  .form-input {
+    @apply bg-bg-secondary border border-border-color text-text-primary rounded-3xl py-2 px-4 placeholder:text-text-muted focus:border-accent-mint focus:ring-2 focus:ring-accent-mint/20 focus:outline-none;
+  }
+
+  /* Checkbox styling */
+  .form-checkbox {
+    @apply w-4 h-4 cursor-pointer bg-bg-secondary border border-border-light rounded accent-accent-mint;
+  }
+
+  /* Ingredient headers */
+  .ingredient-header {
+    @apply py-3.5 px-4 text-sm font-semibold rounded-t-xl bg-accent-coral text-white;
+  }
+
+  /* Recipe cards */
+  .recipe-card {
+    @apply relative overflow-hidden transition-all duration-300 border border-border-color rounded-xl h-full flex flex-col bg-bg-card hover:border-accent-mint hover:bg-bg-card-hover hover:-translate-y-0.5 hover:shadow-xl;
+  }
+
+  .recipe-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-accent-coral to-accent-mint opacity-0 transition-opacity duration-300;
+  }
+
+  .recipe-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .recipe-card .card-body {
+    @apply p-3 flex-1 flex flex-col;
+  }
+
+  .recipe-card .card-title {
+    @apply text-base font-semibold leading-snug text-text-primary mb-2;
+  }
+
+  .recipe-card .card-actions {
+    @apply mt-auto;
+  }
+
+  .btn-view {
+    @apply text-xs py-1 px-3 bg-transparent border border-border-light text-text-secondary rounded-2xl transition-all duration-200 cursor-pointer hover:bg-accent-coral hover:border-accent-coral hover:text-white;
+  }
+
+  .recipe-card .drag-indicator {
+    @apply absolute bottom-2 right-2 text-text-muted text-xs opacity-0 transition-opacity duration-200;
+  }
+
+  .recipe-card:hover .drag-indicator {
+    @apply opacity-100;
+  }
+
+  /* Day cards */
+  .day-card {
+    @apply bg-bg-secondary border-border-color;
+  }
+
+  /* Recipe list */
+  .recipe-list {
+    @apply max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden py-1 px-4 -my-1;
+  }
+
+  .recipe-list::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  .recipe-list::-webkit-scrollbar-track {
+    @apply bg-bg-primary;
+  }
+
+  .recipe-list::-webkit-scrollbar-thumb {
+    @apply bg-border-light rounded-sm hover:bg-text-muted;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50;
+  }
+
+  .modal-content {
+    @apply bg-bg-card border border-border-color rounded-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-hidden;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between border-b border-border-color py-4 px-5;
+  }
+
+  .modal-title {
+    @apply text-lg font-semibold text-text-primary;
+  }
+
+  .modal-body {
+    @apply p-5 overflow-y-auto max-h-[70vh];
+  }
+
+  .btn-close {
+    @apply bg-transparent border-none text-text-muted text-2xl leading-none cursor-pointer transition-colors duration-200 hover:text-text-primary;
+  }
+
+  /* List item */
+  .list-item {
+    @apply bg-bg-secondary border border-border-color text-text-primary py-3 px-4 rounded-lg;
+  }
+
+  /* Drop zone */
+  .drop-zone {
+    @apply bg-bg-secondary border border-border-color rounded-lg py-2 px-3 min-h-[40px] flex items-center justify-center transition-all duration-150;
+  }
+
+  .drop-zone-active {
+    @apply bg-accent-mint/15 border-accent-mint;
+  }
+}
+
+/* Utility for muted text */
+@layer utilities {
+  .text-muted {
+    @apply text-text-muted;
+  }
+}

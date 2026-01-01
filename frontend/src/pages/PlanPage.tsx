@@ -160,11 +160,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="container-fluid p-4">
+      <div className="w-full p-4">
         {/* Main content area */}
-        <div className="row g-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Recipe list */}
-          <div className="col-12 col-lg-6">
+          <div>
             <p className="section-header">Recipes</p>
             <div className="recipe-list">
               <RecipeCards searchQuery={searchQuery} />
@@ -172,59 +172,57 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
 
           {/* Weekly planner */}
-          <div className="col-12 col-lg-6">
+          <div>
             <p className="section-header">Weekly Plan</p>
-            <div className="row g-2">
+            <div className="flex flex-col gap-2">
               {Object.keys(mealPlan).map((day) => (
-                <div key={day} className="col-12">
-                  <div className="card day-card">
-                    <div className="card-body py-2 px-3">
-                      <div className="row align-items-center">
-                        <div className="col-2">
-                          <span className="text-capitalize fw-medium" style={{ color: "#ffffff" }}>
-                            {day.slice(0, 3)}
-                          </span>
-                        </div>
-                        <div className="col-5">
-                          <Calendar droppableId={`${day}-lunch`}>
-                            {mealPlan[day].lunch ? (
-                              <div className="d-flex align-items-center justify-content-between w-100">
-                                <span className="small fw-medium text-truncate me-2">
-                                  {mealPlan[day].lunch.name}
-                                </span>
-                                <button
-                                  className="btn btn-sm btn-outline-danger flex-shrink-0"
-                                  onClick={() => updateMeal(day, "lunch", null)}
-                                  aria-label={`Remove ${mealPlan[day].lunch.name}`}
-                                >
-                                  ×
-                                </button>
-                              </div>
-                            ) : (
-                              <span className="text-muted small">Lunch</span>
-                            )}
-                          </Calendar>
-                        </div>
-                        <div className="col-5">
-                          <Calendar droppableId={`${day}-dinner`}>
-                            {mealPlan[day].dinner ? (
-                              <div className="d-flex align-items-center justify-content-between w-100">
-                                <span className="small fw-medium text-truncate me-2">
-                                  {mealPlan[day].dinner.name}
-                                </span>
-                                <button
-                                  className="btn btn-sm btn-outline-danger flex-shrink-0"
-                                  onClick={() => updateMeal(day, "dinner", null)}
-                                  aria-label={`Remove ${mealPlan[day].dinner.name}`}
-                                >
-                                  ×
-                                </button>
-                              </div>
-                            ) : (
-                              <span className="text-muted small">Dinner</span>
-                            )}
-                          </Calendar>
-                        </div>
+                <div key={day} className="card day-card">
+                  <div className="card-body py-2 px-3">
+                    <div className="flex items-center">
+                      <div className="w-[16.67%]">
+                        <span className="capitalize font-medium text-white">
+                          {day.slice(0, 3)}
+                        </span>
+                      </div>
+                      <div className="w-[41.67%] pr-2">
+                        <Calendar droppableId={`${day}-lunch`}>
+                          {mealPlan[day].lunch ? (
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-sm font-medium truncate mr-2">
+                                {mealPlan[day].lunch.name}
+                              </span>
+                              <button
+                                className="btn-outline-danger shrink-0"
+                                onClick={() => updateMeal(day, "lunch", null)}
+                                aria-label={`Remove ${mealPlan[day].lunch.name}`}
+                              >
+                                &times;
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-muted text-sm">Lunch</span>
+                          )}
+                        </Calendar>
+                      </div>
+                      <div className="w-[41.67%]">
+                        <Calendar droppableId={`${day}-dinner`}>
+                          {mealPlan[day].dinner ? (
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-sm font-medium truncate mr-2">
+                                {mealPlan[day].dinner.name}
+                              </span>
+                              <button
+                                className="btn-outline-danger shrink-0"
+                                onClick={() => updateMeal(day, "dinner", null)}
+                                aria-label={`Remove ${mealPlan[day].dinner.name}`}
+                              >
+                                &times;
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-muted text-sm">Dinner</span>
+                          )}
+                        </Calendar>
                       </div>
                     </div>
                   </div>
@@ -235,101 +233,85 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         </div>
 
         {/* Ingredients section */}
-        <div className="row g-3 mt-4">
-          <div className="col-md-4">
-            <div className="card h-100">
-              <div className="ingredient-header core text-white">
-                Core Ingredients
-              </div>
-              <div className="card-body">
-                {coreIngredients.length > 0 ? (
-                  <ul className="list-group list-group-flush">
-                    {coreIngredients.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`core-${ingredient.id}`}
-                            checked={checkedIngredients.has(ingredient.id)}
-                            onChange={() => toggleIngredient(ingredient.id)}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor={`core-${ingredient.id}`}
-                          >
-                            {formatIngredientName(ingredient.name)}
-                          </label>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted small mb-0">
-                    Add recipes to see ingredients
-                  </p>
-                )}
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+          <div className="card h-full">
+            <div className="ingredient-header">
+              Core Ingredients
+            </div>
+            <div className="card-body">
+              {coreIngredients.length > 0 ? (
+                <ul className="flex flex-col">
+                  {coreIngredients.map((ingredient) => (
+                    <li key={ingredient.id} className="py-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          className="form-checkbox"
+                          type="checkbox"
+                          id={`core-${ingredient.id}`}
+                          checked={checkedIngredients.has(ingredient.id)}
+                          onChange={() => toggleIngredient(ingredient.id)}
+                        />
+                        <span>{formatIngredientName(ingredient.name)}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted text-sm mb-0">
+                  Add recipes to see ingredients
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="col-md-4">
-            <div className="card h-100">
-              <div className="ingredient-header pantry text-white">
-                Pantry
-              </div>
-              <div className="card-body">
-                {pantryIngredients.length > 0 ? (
-                  <ul className="list-group list-group-flush">
-                    {pantryIngredients.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`pantry-${ingredient.id}`}
-                            checked={checkedIngredients.has(ingredient.id)}
-                            onChange={() => toggleIngredient(ingredient.id)}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor={`pantry-${ingredient.id}`}
-                          >
-                            {formatIngredientName(ingredient.name)}
-                          </label>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted small mb-0">
-                    Add recipes to see pantry items
-                  </p>
-                )}
-              </div>
+          <div className="card h-full">
+            <div className="ingredient-header">
+              Pantry
+            </div>
+            <div className="card-body">
+              {pantryIngredients.length > 0 ? (
+                <ul className="flex flex-col">
+                  {pantryIngredients.map((ingredient) => (
+                    <li key={ingredient.id} className="py-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          className="form-checkbox"
+                          type="checkbox"
+                          id={`pantry-${ingredient.id}`}
+                          checked={checkedIngredients.has(ingredient.id)}
+                          onChange={() => toggleIngredient(ingredient.id)}
+                        />
+                        <span>{formatIngredientName(ingredient.name)}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted text-sm mb-0">
+                  Add recipes to see pantry items
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="col-md-4">
-            <div className="card h-100">
-              <div className="ingredient-header shopping text-white">
-                Shopping List
-              </div>
-              <div className="card-body">
-                {shoppingList.length > 0 ? (
-                  <ul className="list-group list-group-flush">
-                    {shoppingList.map((ingredient) => (
-                      <li key={ingredient.id} className="list-group-item px-0 py-2 border-0">
-                        {formatIngredientName(ingredient.name)}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted small mb-0">
-                    Check ingredients to add to list
-                  </p>
-                )}
-              </div>
+          <div className="card h-full">
+            <div className="ingredient-header">
+              Shopping List
+            </div>
+            <div className="card-body">
+              {shoppingList.length > 0 ? (
+                <ul className="flex flex-col">
+                  {shoppingList.map((ingredient) => (
+                    <li key={ingredient.id} className="py-2">
+                      {formatIngredientName(ingredient.name)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted text-sm mb-0">
+                  Check ingredients to add to list
+                </p>
+              )}
             </div>
           </div>
         </div>

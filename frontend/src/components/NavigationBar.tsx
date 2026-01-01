@@ -5,16 +5,15 @@ interface NavigationBarProps {
 export default function NavigationBar({ onSearch }: NavigationBarProps) {
   return (
     <nav className="navbar">
-      <div className="container-fluid px-4">
+      <div className="w-full px-4 flex items-center justify-between">
         <span className="navbar-brand">automeals</span>
-        <div className="d-flex align-items-center">
+        <div className="flex items-center">
           <input
-            className="form-control"
+            className="form-input w-[280px]"
             type="search"
             placeholder="Search recipes..."
             aria-label="Search recipes"
             onChange={(e) => onSearch(e.target.value)}
-            style={{ width: "280px" }}
           />
         </div>
       </div>

@@ -12,6 +12,7 @@ interface RecipeCardsProps {
 export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   const [recipes, setRecipes] = useState<TidyRecipe[] | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -55,33 +56,32 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
       });
 
     return (
-      <div className="col">
-        <div
-          ref={setNodeRef}
-          {...listeners}
-          {...attributes}
-          className="card recipe-card"
-          style={{
-            opacity: isDragging ? 0.4 : 1,
-            cursor: "grab",
-          }}
-        >
-          <div className="card-body">
-            <h5 className="card-title">{recipe.name}</h5>
-            <div className="card-actions">
-              <button
-                type="button"
-                className="btn btn-view"
-                data-bs-toggle="modal"
-                data-bs-target="#instructionsModal"
-                onClick={() => setSelectedRecipe(recipe)}
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                View Recipe
-              </button>
-            </div>
-            <span className="drag-indicator">Drag to plan</span>
+      <div
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
+        className="card recipe-card"
+        style={{
+          opacity: isDragging ? 0.4 : 1,
+          cursor: "grab",
+        }}
+      >
+        <div className="card-body">
+          <h5 className="card-title">{recipe.name}</h5>
+          <div className="card-actions">
+            <button
+              type="button"
+              className="btn-view"
+              onClick={() => {
+                setSelectedRecipe(recipe);
+                setIsModalOpen(true);
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+            >
+              View Recipe
+            </button>
           </div>
+          <span className="drag-indicator">Drag to plan</span>
         </div>
       </div>
     );
@@ -93,12 +93,16 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
 
   return (
     <>
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filteredRecipes?.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </div>
-      <InstructionsModal recipe={selectedRecipe} />
+      <InstructionsModal
+        recipe={selectedRecipe}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <DragOverlay>
         {activeRecipe ? (
           <div
@@ -112,8 +116,8 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
               minHeight: "auto",
             }}
           >
-            <div className="card-body" style={{ padding: "12px 16px" }}>
-              <span className="fw-medium" style={{ fontSize: "0.875rem" }}>
+            <div className="p-3">
+              <span className="font-medium text-sm">
                 {activeRecipe.name}
               </span>
             </div>
