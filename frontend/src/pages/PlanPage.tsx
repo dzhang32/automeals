@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Calendar from "../components/Calendar";
 import type { Recipe, TidyRecipe, Ingredient } from "../types/recipe";
 import tidyRecipe from "../utils/tidyRecipe";
+import { API_BASE_URL } from "../utils/api";
 
 interface PlanPageProps {
   searchQuery: string;
@@ -33,7 +34,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
   // Fetch recipes to have access to recipe data for lookups
   useEffect(() => {
-    fetch("http://localhost:8000/recipes")
+    fetch(`${API_BASE_URL}/recipes`)
       .then((res) => res.json())
       .then((res) =>
         res.sort((a: Recipe, b: Recipe) => a.name.localeCompare(b.name))
@@ -51,7 +52,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   const updateMeal = async (day: string, meal: string, recipe: TidyRecipe | null) => {
     if (recipe && recipe.ingredients.length === 0) {
       try {
-        const response = await fetch(`http://localhost:8000/recipes/${recipe.id}/ingredients`);
+        const response = await fetch(`${API_BASE_URL}/recipes/${recipe.id}/ingredients`);
         const ingredients = await response.json();
         recipe = { ...recipe, ingredients };
       } catch (error) {

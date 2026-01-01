@@ -4,6 +4,7 @@ import InstructionsModal from "./InstructionsModal";
 import tidyRecipe from "../utils/tidyRecipe";
 import Fuse from "fuse.js";
 import { useDraggable, DragOverlay, useDndMonitor } from "@dnd-kit/core";
+import { API_BASE_URL } from "../utils/api";
 
 interface RecipeCardsProps {
   searchQuery: string;
@@ -16,7 +17,7 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/recipes")
+    fetch(`${API_BASE_URL}/recipes`)
       .then((res) => res.json())
       .then((res) =>
         res.sort((a: Recipe, b: Recipe) => a.name.localeCompare(b.name))
