@@ -1,5 +1,7 @@
 # automeals - backend
 
+The backend of `automeals` is built using `fastapi`. 
+
 ## Installation
 
 I recommend using [uv](https://docs.astral.sh/uv/) to manage the python version, virtual environment and `automeals` backend installation:
@@ -10,7 +12,9 @@ source .venv/bin/activate
 uv pip install .
 ```
 
-## Usage
+## Development
+
+- Run a local, development version of the backend:
 
 ```bash
 uvicorn app.main:app --reload
