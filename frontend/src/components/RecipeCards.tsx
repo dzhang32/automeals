@@ -23,11 +23,14 @@ export default function RecipeCards({
   const [selectedRecipe, setSelectedRecipe] = useState<TidyRecipe | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetchRecipes()
       .then((data) => setRecipes(data.map(tidyRecipe)))
-      .catch(() => setRecipes(null));
+      .catch(() => setRecipes(null))
+      .finally(() => setIsLoading(false));
   }, []);
 
   // Initialize Fuse instance for fuzzy search.
@@ -106,6 +109,15 @@ export default function RecipeCards({
   const activeRecipe = activeId
     ? filteredRecipes?.find((r) => r.id.toString() === activeId)
     : null;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="loading-spinner mb-4" />
+        <p className="text-text-secondary text-base">Loading recipes...</p>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -161,6 +161,21 @@
   .drop-zone-active {
     @apply bg-accent-mint/15 border-accent-mint;
   }
+
+  /* Loading spinner */
+  .loading-spinner {
+    @apply w-12 h-12 border-4 border-border-color border-t-accent-mint rounded-full;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Utility for muted text */
