@@ -22,10 +22,6 @@
     @apply bg-bg-card border border-border-color rounded-xl;
   }
 
-  .card-header {
-    @apply bg-bg-secondary border-b border-border-color font-semibold;
-  }
-
   .card-body {
     @apply p-5;
   }
@@ -44,16 +40,12 @@
     @apply py-1.5 px-4 rounded-2xl;
   }
 
-  .btn-primary {
-    @apply bg-accent-coral border border-accent-coral text-white hover:bg-accent-coral-hover hover:border-accent-coral-hover;
-  }
-
-  .btn-outline-secondary {
-    @apply text-text-secondary border border-border-light bg-transparent hover:bg-bg-card-hover hover:text-text-primary;
-  }
-
   .btn-outline-danger {
     @apply text-xs py-1 px-2.5 rounded-2xl text-accent-coral border border-accent-coral bg-transparent hover:bg-accent-coral hover:text-white cursor-pointer;
+  }
+
+  .btn-outline-light {
+    @apply text-text-primary border border-border-light bg-transparent hover:bg-bg-card-hover hover:border-text-secondary;
   }
 
   /* Navbar */

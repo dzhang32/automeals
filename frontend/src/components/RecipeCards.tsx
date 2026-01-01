@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
-import type { Recipe, TidyRecipe } from "../types/recipe";
+import type { TidyRecipe } from "../types/recipe";
 import InstructionsModal from "./InstructionsModal";
 import tidyRecipe from "../utils/tidyRecipe";
 import Fuse from "fuse.js";
 import { useDraggable, DragOverlay, useDndMonitor } from "@dnd-kit/core";
-import { API_BASE_URL } from "../utils/api";
+import { fetchRecipes } from "../utils/api";
 
 interface RecipeCardsProps {
   searchQuery: string;
@@ -17,14 +17,8 @@ export default function RecipeCards({ searchQuery }: RecipeCardsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/recipes`)
-      .then((res) => res.json())
-      .then((res) =>
-        res.sort((a: Recipe, b: Recipe) => a.name.localeCompare(b.name))
-      )
-      .then((data: Recipe[]) => {
-        setRecipes(data.map(tidyRecipe));
-      })
+    fetchRecipes()
+      .then((data) => setRecipes(data.map(tidyRecipe)))
       .catch(() => setRecipes(null));
   }, []);
 
