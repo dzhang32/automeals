@@ -41,3 +41,11 @@ async def get_recipe_ingredients(
         raise HTTPException(status_code=404, detail="Recipe not found")
 
     return recipe.ingredients
+
+
+@router.get("/health")
+def health_check():
+    """
+    Check backend health.
+    """
+    return {"status": "ok"}
