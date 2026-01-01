@@ -160,9 +160,9 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <div className="w-full p-4">
+      <div className="w-full p-6">
         {/* Main content area */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recipe list */}
           <div>
             <p className="section-header px-4">Recipes</p>
@@ -174,10 +174,10 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           {/* Weekly planner */}
           <div>
             <p className="section-header">Weekly Plan</p>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {Object.keys(mealPlan).map((day) => (
                 <div key={day} className="card day-card">
-                  <div className="card-body py-2 px-3">
+                  <div className="card-body py-3 px-4">
                     <div className="flex items-center">
                       <div className="w-[16.67%]">
                         <span className="capitalize font-medium text-white">
@@ -233,8 +233,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         </div>
 
         {/* Ingredients section */}
-        <p className="section-header mt-4">Ingredients</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <p className="section-header mt-8">Ingredients</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="card h-full">
             <div className="ingredient-header">
               Core
@@ -252,7 +252,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                           checked={checkedIngredients.has(ingredient.id)}
                           onChange={() => toggleIngredient(ingredient.id)}
                         />
-                        <span>{formatIngredientName(ingredient.name)}</span>
+                        <span className="text-sm">{formatIngredientName(ingredient.name)}</span>
                       </label>
                     </li>
                   ))}
@@ -282,7 +282,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                           checked={checkedIngredients.has(ingredient.id)}
                           onChange={() => toggleIngredient(ingredient.id)}
                         />
-                        <span>{formatIngredientName(ingredient.name)}</span>
+                        <span className="text-sm">{formatIngredientName(ingredient.name)}</span>
                       </label>
                     </li>
                   ))}
@@ -303,7 +303,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
               {shoppingList.length > 0 ? (
                 <ul className="flex flex-col">
                   {shoppingList.map((ingredient) => (
-                    <li key={ingredient.id} className="py-2">
+                    <li key={ingredient.id} className="py-2 text-sm">
                       {formatIngredientName(ingredient.name)}
                     </li>
                   ))}
