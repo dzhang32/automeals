@@ -85,15 +85,6 @@
     @apply relative overflow-hidden transition-all duration-300 border border-border-color rounded-xl h-full flex flex-col bg-bg-card hover:border-accent-mint hover:bg-bg-card-hover hover:-translate-y-0.5 hover:shadow-xl;
   }
 
-  .recipe-card::before {
-    content: '';
-    @apply absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-accent-coral to-accent-mint opacity-0 transition-opacity duration-300;
-  }
-
-  .recipe-card:hover::before {
-    @apply opacity-100;
-  }
-
   .recipe-card .card-body {
     @apply p-3 flex-1 flex flex-col;
   }

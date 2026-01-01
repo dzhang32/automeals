@@ -165,7 +165,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Recipe list */}
           <div>
-            <p className="section-header">Recipes</p>
+            <p className="section-header px-4">Recipes</p>
             <div className="recipe-list">
               <RecipeCards searchQuery={searchQuery} />
             </div>
@@ -233,10 +233,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
         </div>
 
         {/* Ingredients section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+        <p className="section-header mt-4">Ingredients</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="card h-full">
             <div className="ingredient-header">
-              Core Ingredients
+              Core
             </div>
             <div className="card-body">
               {coreIngredients.length > 0 ? (
