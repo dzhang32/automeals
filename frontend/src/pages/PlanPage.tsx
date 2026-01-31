@@ -32,6 +32,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(
     new Set()
   );
+  const [ingredientCounts, setIngredientCounts] = useState<Record<number, number>>({});
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
@@ -125,7 +126,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     if (shoppingList.length === 0) return;
 
     const csvContent = shoppingList
-      .map((ingredient) => `${formatIngredientName(ingredient.name)},1`)
+      .map((ingredient) => `${formatIngredientName(ingredient.name)},${ingredientCounts[ingredient.id] || 1}`)
       .join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv" });
@@ -140,9 +141,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   };
 
   // Collect all unique ingredients from the meal plan and separate by type
-  const { coreIngredients, pantryIngredients, allIngredients } = useMemo(() => {
+  const { coreIngredients, pantryIngredients, allIngredients, defaultCounts } = useMemo(() => {
     const ingredientsMap = new Map<number, Ingredient>();
-
     Object.values(mealPlan).forEach((day) => {
       [day.lunch, day.dinner].forEach((recipe) => {
         if (recipe?.ingredients) {
@@ -163,10 +163,14 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       .filter((ing) => !ing.core)
       .sort((a, b) => a.name.localeCompare(b.name));
 
+    const defaults: Record<number, number> = {};
+    all.forEach((ing) => { defaults[ing.id] = 1; });
+
     return {
       coreIngredients: core,
       pantryIngredients: pantry,
       allIngredients: all,
+      defaultCounts: defaults,
     };
   }, [mealPlan]);
 
@@ -176,6 +180,11 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
       .filter((ing) => checkedIngredients.has(ing.id))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [allIngredients, checkedIngredients]);
+
+  // Reset ingredient counts to defaults when meal plan changes
+  useEffect(() => {
+    setIngredientCounts(defaultCounts);
+  }, [defaultCounts]);
 
   // Automatically check all core ingredients when they appear
   useEffect(() => {
@@ -361,8 +370,33 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
               {shoppingList.length > 0 ? (
                 <ul className="flex flex-col">
                   {shoppingList.map((ingredient) => (
-                    <li key={ingredient.id} className="py-2 text-sm">
-                      {formatIngredientName(ingredient.name)}
+                    <li key={ingredient.id} className="py-2 text-sm flex items-center gap-2">
+                      <button
+                        className="w-6 h-6 flex items-center justify-center rounded bg-bg-secondary hover:bg-accent-coral hover:text-white text-text-secondary text-xs font-bold transition-colors"
+                        onClick={() =>
+                          setIngredientCounts((prev) => ({
+                            ...prev,
+                            [ingredient.id]: Math.max(0, (prev[ingredient.id] || 1) - 1),
+                          }))
+                        }
+                        aria-label={`Decrease ${ingredient.name}`}
+                      >
+                        −
+                      </button>
+                      <span className="w-5 text-center">{ingredientCounts[ingredient.id] || 1}</span>
+                      <button
+                        className="w-6 h-6 flex items-center justify-center rounded bg-bg-secondary hover:bg-accent-coral hover:text-white text-text-secondary text-xs font-bold transition-colors"
+                        onClick={() =>
+                          setIngredientCounts((prev) => ({
+                            ...prev,
+                            [ingredient.id]: (prev[ingredient.id] || 1) + 1,
+                          }))
+                        }
+                        aria-label={`Increase ${ingredient.name}`}
+                      >
+                        +
+                      </button>
+                      <span>{formatIngredientName(ingredient.name)}</span>
                     </li>
                   ))}
                 </ul>
