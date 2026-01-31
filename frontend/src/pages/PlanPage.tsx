@@ -34,6 +34,9 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
   );
   const [ingredientCounts, setIngredientCounts] = useState<Record<number, number>>({});
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [customIngredients, setCustomIngredients] = useState<string[]>([]);
+  const [customInput, setCustomInput] = useState("");
+  const [customCounts, setCustomCounts] = useState<Record<string, number>>({});
   const isMobile = useIsMobile();
 
   // Fetch recipes to have access to recipe data for lookups
@@ -122,12 +125,25 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     });
   };
 
-  const downloadShoppingList = () => {
-    if (shoppingList.length === 0) return;
+  const addCustomIngredient = () => {
+    const trimmed = customInput.trim();
+    if (trimmed && !customIngredients.includes(trimmed)) {
+      setCustomIngredients((prev) => [...prev, trimmed]);
+    }
+    setCustomInput("");
+  };
 
-    const csvContent = shoppingList
-      .map((ingredient) => `${formatIngredientName(ingredient.name)},${ingredientCounts[ingredient.id] || 1}`)
-      .join("\n");
+  const removeCustomIngredient = (name: string) => {
+    setCustomIngredients((prev) => prev.filter((n) => n !== name));
+  };
+
+  const downloadShoppingList = () => {
+    if (shoppingList.length === 0 && customIngredients.length === 0) return;
+
+    const recipeLines = shoppingList
+      .map((ingredient) => `${formatIngredientName(ingredient.name)},${ingredientCounts[ingredient.id] || 1}`);
+    const customLines = customIngredients.map((name) => `${name},${customCounts[name] || 1}`);
+    const csvContent = [...recipeLines, ...customLines].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -292,7 +308,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
 
         {/* Ingredients section */}
         <p className="section-header mt-8">Ingredients</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="card h-full">
             <div className="ingredient-header">
               Core
@@ -354,9 +370,51 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
           </div>
 
           <div className="card h-full">
+            <div className="ingredient-header">
+              Custom
+            </div>
+            <div className="card-body">
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  className="flex-1 px-2 py-1 text-sm rounded bg-bg-secondary text-white border border-border-primary focus:outline-none focus:border-accent-coral"
+                  placeholder="Type to add ingredient"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addCustomIngredient();
+                  }}
+                />
+                <button
+                  className="btn btn-sm btn-outline-light"
+                  onClick={addCustomIngredient}
+                >
+                  Add
+                </button>
+              </div>
+              {customIngredients.length > 0 ? (
+                <ul className="flex flex-col">
+                  {customIngredients.map((name) => (
+                    <li key={name} className="py-2 text-sm flex items-center justify-between">
+                      <span>{name}</span>
+                      <button
+                        className="btn-outline-danger shrink-0"
+                        onClick={() => removeCustomIngredient(name)}
+                        aria-label={`Remove ${name}`}
+                      >
+                        &times;
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="card h-full">
             <div className="ingredient-header flex items-center justify-between">
               <span>Shopping List</span>
-              {shoppingList.length > 0 && (
+              {(shoppingList.length > 0 || customIngredients.length > 0) && (
                 <button
                   className="btn btn-sm btn-outline-light"
                   onClick={downloadShoppingList}
@@ -367,7 +425,7 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
               )}
             </div>
             <div className="card-body">
-              {shoppingList.length > 0 ? (
+              {shoppingList.length > 0 || customIngredients.length > 0 ? (
                 <ul className="flex flex-col">
                   {shoppingList.map((ingredient) => (
                     <li key={ingredient.id} className="py-2 text-sm flex items-center gap-2">
@@ -397,6 +455,36 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
                         +
                       </button>
                       <span>{formatIngredientName(ingredient.name)}</span>
+                    </li>
+                  ))}
+                  {customIngredients.map((name) => (
+                    <li key={`custom-${name}`} className="py-2 text-sm flex items-center gap-2">
+                      <button
+                        className="w-6 h-6 flex items-center justify-center rounded bg-bg-secondary hover:bg-accent-coral hover:text-white text-text-secondary text-xs font-bold transition-colors"
+                        onClick={() =>
+                          setCustomCounts((prev) => ({
+                            ...prev,
+                            [name]: Math.max(0, (prev[name] || 1) - 1),
+                          }))
+                        }
+                        aria-label={`Decrease ${name}`}
+                      >
+                        −
+                      </button>
+                      <span className="w-5 text-center">{customCounts[name] || 1}</span>
+                      <button
+                        className="w-6 h-6 flex items-center justify-center rounded bg-bg-secondary hover:bg-accent-coral hover:text-white text-text-secondary text-xs font-bold transition-colors"
+                        onClick={() =>
+                          setCustomCounts((prev) => ({
+                            ...prev,
+                            [name]: (prev[name] || 1) + 1,
+                          }))
+                        }
+                        aria-label={`Increase ${name}`}
+                      >
+                        +
+                      </button>
+                      <span>{name}</span>
                     </li>
                   ))}
                 </ul>
