@@ -149,7 +149,8 @@ export default function PlanPage({ searchQuery }: PlanPageProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "shopping_list.csv";
+    const today = new Date().toISOString().split("T")[0];
+    link.download = `shopping_list_${today}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
